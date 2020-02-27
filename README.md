@@ -7,7 +7,7 @@
 Python package converts Intrinio objects to native python and pandas objects.
 
 ### The Project
-This project has been created as part of [UBC's Master of Data Science Program](https://masterdatascience.ubc.ca/). Information about the contributors can be found here **link to CONTRIBUTORS.md**. The Code of Conduct can be found here **link to CONDUCT.md**. The collaboration expectations regarding use of Github Flow can be found here **link to CONTRIBUTING.md**.
+This project has been created as part of [UBC's Master of Data Science Program](https://masterdatascience.ubc.ca/). Information about the contributors can be found [here](CONTRIBUTORS.md). The Code of Conduct can be found [here](CONDUCT.md). The collaboration expectations regarding use of Github Flow can be found [here](CONTRIBUTING.md).
 
 If you were to search the web for "historical stock data", or "financial statement data", the results you would come across would be a variety of web applications (such as Google Finance), and maybe some PDFs of financial statements. This is fair, as there is a massive volume of stock data, and financial statements require lots of discretion (including standards followed - US companies may choose between reporting under IFRS and US GAAP). [Intrinio](https://intrinio.com/) offers solutions to this problem with an API platform that can easily be used to extract data and perform further analysis on it.
 
@@ -25,7 +25,20 @@ pip install -i https://test.pypi.org/simple/ pyntrinio
 ### Features
 - TODO
 
+### Functions
+1. **gather_financial_statement_time_series()**: 
+2. **gather_financial_statement_company_compare()**: 
+3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
+4. **gather_stock_returns()**: 
+
 ### Dependencies
+
+Before using any functions included in this package, you must sign up for an appropriate [Intrinio account](https://intrinio.com/). Once you have signed up for the appropriate account, you can find your API key (which is a required argument in all functions) by doing the following:
+
+1. In the top right corner, select `My Account`
+2. In the left hand menu, select `API KEYS`
+3. Copy your relevant API Key. Note that this is unique to you and should not be shared.
+
 
 - TODO
 
@@ -38,3 +51,6 @@ The official documentation is hosted on Read the Docs: <https://pyntrinio.readth
 
 ### Credits
 This package was created with Cookiecutter and the UBC-MDS/cookiecutter-ubc-mds project template, modified from the [pyOpenSci/cookiecutter-pyopensci](https://github.com/pyOpenSci/cookiecutter-pyopensci) project template and the [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage).
+
+### References
+(2007). Retrieved from intrinio.com
