@@ -63,7 +63,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   Returns
   -----------
   pandas.core.frame.DataFrame
-    stock data for the specific timeframe in the specified output format
+    a dataframe that contains the companies, historical prices and corresponding profit/loss
   
   Example
   -----------
