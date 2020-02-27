@@ -29,7 +29,7 @@ pip install -i https://test.pypi.org/simple/ pyntrinio
 1. **gather_financial_statement_time_series()**: 
 2. **gather_financial_statement_company_compare()**: 
 3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
-4. **gather_stock_returns()**: 
+4. **gather_stock_returns()**: This function takes in multiple stock ticker symbols, buy-in date, sell-out date and returns a dataframe containing the historical prices at buy-in and sell-out date as well as the corresponding returns (profit/loss).
 
 ### Dependencies
 
