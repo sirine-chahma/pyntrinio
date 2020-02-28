@@ -6,6 +6,87 @@ import pandas as pd
 import intrinio_sdk
 import datetime
 
+# Function that gathers a given statement at a specific time for different companies
+def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
+  """
+  Given the tickers, statement, year and period returns all the information from the Intrinio API fundamental reported financials
+    for that time and those tickers in either a dictionary or a pandas dataframe format.
+  
+  Parameters
+  -----------
+  api_key : str
+    API key (sandbox or production) from Intrinio
+  ticker : list
+    a list of the ticker symbols you would like to study
+  statement : str
+    the statement that you want to study
+  year : str
+    the year you want the information from
+  period : str
+    the period you want the information from
+  output_format : str (optional, default = 'dict')
+    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
+    
+  Returns
+  -----------
+  object of type output_format
+    information about the given statement for the given tickers at the given time in the specified output format
+  
+  Example
+  -----------
+  >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
+  {'AAPL' : {'ticker': ['AAPL'],
+  'year': ['2019'],
+  'period': ['Q1'],
+  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
+  'CostOfGoodsAndServicesSold': [104558000000.0],
+  'GrossProfit': [32031000000.0],
+  'ResearchAndDevelopmentExpense': [3902000000.0],
+  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
+  'OperatingExpenses': [8685000000.0],
+  'OperatingIncomeLoss': [23346000000.0],
+  'NonoperatingIncomeExpense': [560000000.0],
+  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
+  'IncomeTaxExpenseBenefit': [3941000000.0],
+  'NetIncomeLoss': [19965000000.0],
+  'EarningsPerShareBasic': [4.22],
+  'EarningsPerShareDiluted': [4.18],
+  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
+  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]},
+ 'CSCO' : {'ticker': ['CSCO'],
+  'year': ['2019'],
+  'period': ['Q1'],
+  'RevenueFromContractWithCustomerExcludingAssessedTax': [26145000000.0],
+  'CostOfGoodsAndServicesSold': [9852000000.0],
+  'GrossProfit': [8146000000.0],
+  'ResearchAndDevelopmentExpense': [1608000000.0],
+  'SellingAndMarketingExpense': [2410000000.0],
+  'GeneralAndAdministrativeExpense': [211000000.0],
+  'AmortizationOfIntangibleAssets': [34000000.0],
+  'RestructuringAndOtherCharges': [78000000.0],
+  'OperatingExpenses': [4341000000.0],
+  'OperatingIncomeLoss': [3805000000.0],
+  'InvestmentIncomeInterestAndDividend': [344000000.0],
+  'InterestExpense': [221000000.0],
+  'OtherNonoperatingIncomeExpense': [-19000000.0],
+  'NonoperatingIncomeExpense': [104000000.0],
+  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [3909000000.0],
+  'IncomeTaxExpenseBenefit': [360000000.0],
+  'NetIncomeLoss': [3549000000.0],
+  'EarningsPerShareBasic': [0.78],
+  'EarningsPerShareDiluted': [0.77],
+  'WeightedAverageNumberOfSharesOutstandingBasic': [4565000000.0],
+  'WeightedAverageNumberOfDilutedSharesOutstanding': [4614000000.0]}}
+  """
+  
+  if output_format=='dict':
+    results={}
+  else:
+    results=pd.DataFrame(results)
+  
+  return results
+
+
 # Function that gathers time series data of stock values
 def gather_stock_time_series(api_key, ticker, start_date, end_date, output_format='dict'):
   """
