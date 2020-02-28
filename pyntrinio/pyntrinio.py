@@ -34,7 +34,8 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   Example
   -----------
   >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
-  {'AAPL' : {'ticker': ['AAPL'],
+  {'AAPL' : [
+  {'ticker': ['AAPL'],
   'year': ['2018'],
   'period': ['Q1'],
   'RevenueFromContractWithCustomerExcludingAssessedTax': [16145000000.0],
@@ -52,8 +53,7 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   'EarningsPerShareDiluted': [4.13],
   'WeightedAverageNumberOfSharesOutstandingBasic': [4658920000.0],
   'WeightedAverageNumberOfDilutedSharesOutstanding': [4874252000.0]},
-  
-  'AAPL' : {'ticker': ['AAPL'],
+  {'ticker': ['AAPL'],
   'year': ['2019'],
   'period': ['Q1'],
   'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
@@ -70,7 +70,8 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   'EarningsPerShareBasic': [4.22],
   'EarningsPerShareDiluted': [4.18],
   'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]}}
+  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]}
+  ]}  
   """
   
   if output_format=='dict':
