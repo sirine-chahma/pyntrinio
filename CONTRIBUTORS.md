@@ -1,10 +1,10 @@
-# Credits
+#### Team Andrey Markov
+
+##### Contributors:
+
+- Chahma Sirine
+- Dimri Aakanksha
+- Solomon Samantha 
+- Roc Zhang
 
 
-## Development Lead
-
-* Roc Zhang <roc_zhang@hotmail.com>
-
-## Contributors
-
-None yet. Why not be the first?
