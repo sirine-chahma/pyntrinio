@@ -26,8 +26,8 @@ pip install -i https://test.pypi.org/simple/ pyntrinio
 - TODO
 
 ### Functions
-1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol and returns the specified financial statement, for the user mentioned years and quarters as a dictionary or a pandas dataframe depending on specification.
-2. **gather_financial_statement_company_compare()**: This function takes in a vector containing the tickers of the companies we want to compare, the statement we want to focus on, the year and the period of the year we want to study, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the informations in the selected statement, for the selected companies at the wanted time. 
+1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
+2. **gather_financial_statement_company_compare()**: This function takes in a list containing the tickers of the companies we want to compare, the statement, the year and the period of the year we want to study, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, for the selected companies at the wanted time. 
 3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
 4. **gather_stock_returns()**: This function takes in multiple stock ticker symbols, buy-in date, sell-out date and returns a dataframe containing the historical prices at buy-in and sell-out date as well as the corresponding returns (profit/loss).
 

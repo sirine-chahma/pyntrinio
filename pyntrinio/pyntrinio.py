@@ -15,8 +15,8 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   -----------
   api_key : str
     API key (sandbox or production) from Intrinio
-  ticker : list
-    a list of the ticker symbols you would like to study
+  ticker : str
+    the ticker symbol you would like to get information for
   statement : str
     the statement that you want to study
   year : list
@@ -173,10 +173,10 @@ def gather_stock_time_series(api_key, ticker, start_date, end_date, output_forma
     API key (sandbox or production) from Intrinio
   ticker : str
     the ticker symbol you would like to get stock data for
-  start_date : datetime.date (optional)
-    the earliest date you would like to get stock data for
-  end_date : datetime.date (optional)
-    the most recent date you would like to get stock data for
+  start_date : str (optional)
+    the earliest date in the format of "%Y-%m-%d", e.g. "2019-12-31" to get data for
+  end_date : str (optional)
+    the most recent date in the format of "%Y-%m-%d", e.g. "2019-12-31" to get data for
   output_format : str (optional, default = 'dict')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
     
