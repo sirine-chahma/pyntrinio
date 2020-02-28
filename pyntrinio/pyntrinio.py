@@ -6,6 +6,80 @@ import pandas as pd
 import intrinio_sdk
 import datetime
 
+# Function that gathers a given financial statement for a given company for a specified time
+def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format='dict'): 
+  """
+  Given the tickers, statement, year and period returns all the financial information from the Intrinio API stock data
+  
+  Parameters
+  -----------
+  api_key : str
+    API key (sandbox or production) from Intrinio
+  ticker : list
+    a list of the ticker symbols you would like to study
+  statement : str
+    the statement that you want to study
+  year : list
+    the list containing the years as strings
+  period : list
+    the list of quarters for which you want information
+  output_format : str (optional, default = 'dict')
+    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe  
+
+  Returns
+  -----------
+  pandas.core.frame.DataFrame
+    a dataframe that contains the financial information for a given company for the mentioned period
+
+  Example
+  -----------
+  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
+  {'AAPL' : {'ticker': ['AAPL'],
+  'year': ['2018'],
+  'period': ['Q1'],
+  'RevenueFromContractWithCustomerExcludingAssessedTax': [16145000000.0],
+  'CostOfGoodsAndServicesSold': [104262000000.0],
+  'GrossProfit': [21078007000.0],
+  'ResearchAndDevelopmentExpense': [396090000.0],
+  'SellingGeneralAndAdministrativeExpense': [482045600.0],
+  'OperatingExpenses': [7899000000.0],
+  'OperatingIncomeLoss': [2388230000.0],
+  'NonoperatingIncomeExpense': [470000000.0],
+  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [13906050000.0],
+  'IncomeTaxExpenseBenefit': [3986500000.0],
+  'NetIncomeLoss': [20970000000.0],
+  'EarningsPerShareBasic': [4.17],
+  'EarningsPerShareDiluted': [4.13],
+  'WeightedAverageNumberOfSharesOutstandingBasic': [4658920000.0],
+  'WeightedAverageNumberOfDilutedSharesOutstanding': [4874252000.0]},
+  
+  'AAPL' : {'ticker': ['AAPL'],
+  'year': ['2019'],
+  'period': ['Q1'],
+  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
+  'CostOfGoodsAndServicesSold': [104558000000.0],
+  'GrossProfit': [32031000000.0],
+  'ResearchAndDevelopmentExpense': [3902000000.0],
+  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
+  'OperatingExpenses': [8685000000.0],
+  'OperatingIncomeLoss': [23346000000.0],
+  'NonoperatingIncomeExpense': [560000000.0],
+  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
+  'IncomeTaxExpenseBenefit': [3941000000.0],
+  'NetIncomeLoss': [19965000000.0],
+  'EarningsPerShareBasic': [4.22],
+  'EarningsPerShareDiluted': [4.18],
+  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
+  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]}}
+  """
+  
+  if output_format=='dict':
+    results={}
+  else:
+    results=pd.DataFrame(results)
+  
+  return results
+
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
   """
@@ -149,7 +223,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   Example
   -----------
   >>> gather_stock_returns(api_key, ['AAPL', 'AMZON'], "2017-12-31", "2019-03-01")
- 
+
   """
   
   results = pd.DataFrame()
