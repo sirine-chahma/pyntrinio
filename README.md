@@ -40,7 +40,11 @@ Before using any functions included in this package, you must sign up for an app
 3. Copy your relevant API Key. Note that this is unique to you and should not be shared.
 
 
-- TODO
+Python 3.7.3 and Python packages:
+
+- pandas==0.24.2
+- altair==3.2.0
+- intrinio-sdk==5.1.0
 
 ### Usage
 
