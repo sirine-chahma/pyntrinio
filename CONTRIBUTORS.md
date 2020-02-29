@@ -2,9 +2,8 @@
 
 ##### Contributors:
 
-- Chahma Sirine
-- Dimri Aakanksha
-- Solomon Samantha 
-- Roc Zhang
-
+- Chahma, Sirine
+- Dimri, Aakanksha
+- Solomon, Samantha
+- Zhang, Roc
 
