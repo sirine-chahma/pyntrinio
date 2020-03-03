@@ -227,6 +227,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
 
   """
   
+  # some test  messages
   results = pd.DataFrame()
   
   return results
