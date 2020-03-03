@@ -190,6 +190,15 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   -----------
   >>> gather_stock_time_series(api_key, 'AAPL')
   """
+  try:
+    # change dates to datetime objects
+    if start_date is not None:
+      start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if end_date is not None:
+      end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+  except:
+    print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
+    return
   
   try:
     # initialize API key
@@ -202,16 +211,6 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
     stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date).stock_prices
   except:
     print("Incorrect API Key - please input a valid API key as a string")
-    return
-  
-  try:
-    # change dates to datetime objects
-    if start_date is not None:
-      start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-    if end_date is not None:
-      end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-  except:
-    print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
     return
     
   # initialize a results dictionary
