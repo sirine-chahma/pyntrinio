@@ -110,56 +110,130 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   Example
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
-  {'AAPL' : {'ticker': ['AAPL'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
-  'CostOfGoodsAndServicesSold': [104558000000.0],
-  'GrossProfit': [32031000000.0],
-  'ResearchAndDevelopmentExpense': [3902000000.0],
-  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
-  'OperatingExpenses': [8685000000.0],
-  'OperatingIncomeLoss': [23346000000.0],
-  'NonoperatingIncomeExpense': [560000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
-  'IncomeTaxExpenseBenefit': [3941000000.0],
-  'NetIncomeLoss': [19965000000.0],
-  'EarningsPerShareBasic': [4.22],
-  'EarningsPerShareDiluted': [4.18],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]},
- 'CSCO' : {'ticker': ['CSCO'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [26145000000.0],
-  'CostOfGoodsAndServicesSold': [9852000000.0],
-  'GrossProfit': [8146000000.0],
-  'ResearchAndDevelopmentExpense': [1608000000.0],
-  'SellingAndMarketingExpense': [2410000000.0],
-  'GeneralAndAdministrativeExpense': [211000000.0],
-  'AmortizationOfIntangibleAssets': [34000000.0],
-  'RestructuringAndOtherCharges': [78000000.0],
-  'OperatingExpenses': [4341000000.0],
-  'OperatingIncomeLoss': [3805000000.0],
-  'InvestmentIncomeInterestAndDividend': [344000000.0],
-  'InterestExpense': [221000000.0],
-  'OtherNonoperatingIncomeExpense': [-19000000.0],
-  'NonoperatingIncomeExpense': [104000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [3909000000.0],
-  'IncomeTaxExpenseBenefit': [360000000.0],
-  'NetIncomeLoss': [3549000000.0],
-  'EarningsPerShareBasic': [0.78],
-  'EarningsPerShareDiluted': [0.77],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4565000000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4614000000.0]}}
-  """
+  """    
+  inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
+  #Check if api_key, statement, year, period are strings
+  for inst in inputs.keys():
+    if not isinstance(inputs[inst], str):
+      raise Exception("Sorry, " + inst + " must be a string")
+          
+  #Check if ticker is a list
+  if not isinstance(ticker, list):
+    raise Exception("Sorry, ticker must be a list")
   
-  if output_format=='dict':
-    results={}
+  #Check if the ticker is valid
+  
+  #Check if the statement if valid
+  
+  #Check if the year is a 4-digits number
+  if not len(year)==4:
+    raise Exception("Sorry, year must be a string with 4 digits")
+  
+
+  #Check if the output_format is either 'dict' or 'pddf' 
+  if not output_format in ['dict', 'pddf']:
+    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+  
+  
+  #link with the API
+  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+  fundamentals_api = intrinio_sdk.FundamentalsApi()
+  
+  #result will contain a dictionnary for each company.
+  #This dictionnary will contain all the information for one company
+  result = []
+
+  #for every company
+  for comp in ticker : 
+    #key is the appropriate key to select the information we want
+    key = comp + '-' + str(statement) + '-' + str(year) + '-' + str(period)
+    #get the object that we want from the API
+    fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+    my_fund = fundamentals.reported_financials
+
+    #This dictionnary will contain all the information for one company
+    dict ={}
+    dict['ticker'] = comp
+    dict['statement'] = statement
+    dict['year'] = year
+    dict['period'] = period
+      
+    #we store all the values, balances, names and the tags
+    for i in range(len(my_fund)):
+      value = my_fund[i].value
+      tag_dic = my_fund[i].xbrl_tag
+      balance = tag_dic.balance
+      name = tag_dic.name
+      tag = tag_dic.tag
+      #tag is a key of this dictionnary
+          
+      #if the tag is several times in the original object, we keep one tag and the 
+      # value is the sum or the substraction of all the values of this tag 
+      # (depending on the value of balance) 
+      if tag in dict.keys():
+        if balance == 'credit':
+          value = dict[tag]['value'] - value
+        else : 
+           value = dict[tag]['value'] + value
+      dict[tag] = {'value' : value, 'balance': balance, 'name': name}
+          
+      result.append(dict)
+      
+  if output_format == 'dict':
+    return result
+  
+  #if the wanted type of the output is a dataframe
   else:
-    results=pd.DataFrame(results)
-  
-  return results
+    #initialize a new empty dictionnary that we will convert into a dataframe
+    #this dictionnary will have the following structure
+    # {'name': [name1, name2], 'revenue' : [revenu_company_1, revenue_company_2], ...}
+    df = {}
+    
+    #for every company
+    for i in range(len(result)):
+          
+      #select all the information about this company
+      sub_dict = result[i]
+            
+      #For all the tags that we have for this company
+      for val in sub_dict.keys():
+                
+        #if the key is already in the df dictionnary
+        if val in df.keys():
+                  
+          #if the value that corresponds to the key is a string 
+          # which means that the key is 'ticker', 'statement', 'year' or 'period'
+          if type(sub_dict[val]) == str:
+                        
+            #We appen the value of the key
+            df[val].append(sub_dict[val])
+                        
+          #if the value of the key is a dictionnary
+          else:
+                        
+            #only take the value that corresponds to the key 'value'
+            df[val].append(sub_dict[val]['value'])
+                
+        #This step is to make sure that all the values in this dictionnary
+        # (which are lists) are the same length
+        #if the tag of the company is not already in the df dictionnary
+        else:
+
+          if type(sub_dict[val]) == str:
+            #We have to put as many 'None' as the number of companies for 
+            # which we already collected the information 
+            df[val] = [None for j in range(i)] + [sub_dict[val]]
+          else:
+            df[val] = [None for j in range(i)] + [sub_dict[val]['value']]
+      # We add some 'None' to make sure that all the values are the same 
+      #length in this dictionnary
+      for val in df.keys():
+        #The length of each value should be i+1 (=number of companies we studied)
+        if len(df[val]) != i+1:
+          df[val].append(None)
+                  
+  return pd.DataFrame(df)
+                    
 
 
 # Function that gathers time series data of stock values
