@@ -4,7 +4,7 @@
 # Imports
 import pandas as pd
 import intrinio_sdk
-import datetime
+from datetime import datetime, timedelta
 
 # Function that gathers a given financial statement for a given company for a specified time
 def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format='dict'): 
@@ -212,9 +212,9 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   tickers : list or str
     a single ticker or a list containing tickers. e.g. 'AAPL' or ['AAPL', 'CSCO']
   buy_date : str
-    the buy-in date in the format of "%Y-%m-%d", e.g. "2019-12-31"
-  end_date : str
-    the sell-out date in the format of "%Y-%m-%d", e.g. "2019-12-31"
+    the buy-in date in the format of "%Y-%m-%d", e.g. "2019-12-31". If the input date is not a trading day, it will be automatically changed to the next nearest trading day. 
+  sell_date : str
+    the sell-out date in the format of "%Y-%m-%d", e.g. "2019-12-31". If the input date is not a trading day, it will be automatically changed to the last nearest trading day. 
     
   Returns
   -----------
@@ -229,8 +229,8 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   
   # test whether the input dates are in the right format
   try:
-    datetime.strptime(buy_date, '%Y-%m-%d').date()
-    datetime.strptime(sell_date, '%Y-%m-%d').date()
+    buy_date = datetime.strptime(buy_date, '%Y-%m-%d').date()
+    sell_date = datetime.strptime(sell_date, '%Y-%m-%d').date()
   except:
     print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
     return
@@ -257,10 +257,15 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
 
   # iterate through all the tickers and record the results
   i=0
-  for ticker in ticker: 
-      api_response = security_api.get_security_stock_prices(ticker, start_date=buy_date, end_date=sell_date)
+  buy_date_upper = buy_date + timedelta(days=10) # if buy_date it not a trading day (holiday), we'll get the nearest next trading day instead
+  sell_date_lower = sell_date - timedelta(days=10) # the same idea for sell_date, but we'll get the nearest **last** trading day instead.
+  
+  for ticker in ticker:
+      api_response = security_api.get_security_stock_prices(ticker, start_date=buy_date, end_date=buy_date_upper)
       buy_price = api_response.stock_prices[-1].adj_close
       buy_date = api_response.stock_prices[-1].date.strftime("%Y-%m-%d")
+      
+      api_response = security_api.get_security_stock_prices(ticker, start_date=sell_date_lower, end_date=sell_date)
       sell_price = api_response.stock_prices[0].adj_close
       sell_date = api_response.stock_prices[0].date.strftime("%Y-%m-%d")
       rtn = ((sell_price - buy_price) / buy_price)*100
