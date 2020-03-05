@@ -232,7 +232,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     buy_date = datetime.strptime(buy_date, '%Y-%m-%d').date()
     sell_date = datetime.strptime(sell_date, '%Y-%m-%d').date()
     if buy_date >= sell_date:
-      print("Invalid Input: `sell_date` is earlier to `buy_date`.")
+      print("Invalid Input: `sell_date` is earlier than `buy_date`.")
       return
   except:
     print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
