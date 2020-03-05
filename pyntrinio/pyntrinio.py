@@ -7,9 +7,9 @@ import intrinio_sdk
 from datetime import datetime, timedelta
 
 # Function that gathers a given financial statement for a given company for a specified time
-def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format='dict'): 
+def gather_financial_statement_time_series(api_key, ticker, statement, year, period):
   """
-  Given the tickers, statement, year and period returns all the financial information from the Intrinio API stock data
+  Given the tickers, statement, year and period returns the complete financial information from the Intrinio API stock data
   
   Parameters
   -----------
@@ -22,27 +22,52 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   year : list
     the list containing the years as strings
   period : list
-    the list of quarters for which you want information
-  output_format : str (optional, default = 'dict')
-    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe  
+    the list of quarters (as strings) for which you want information 
 
   Returns
   -----------
   pandas.core.frame.DataFrame
-    a dataframe that contains the financial information for a given company for the mentioned period
+    a dataframe that contains the financial information for a given company for the mentioned year(s) & period(s)
 
   Example
   -----------
-  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
+  >>> gather_financial_statement_time_series(api_key, 'CSCO', 'income_statement', ['2016','2017','2018'], ['Q1','Q2','Q3'])
   
-  """
+  """  
   
-  if output_format=='dict':
-    results={}
-  else:
-    results=pd.DataFrame(results)
-  
-  return results
+  # Initialize API key
+  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+  fundamentals_api = intrinio_sdk.FundamentalsApi()
+    
+  # Empty list to store results: reformat later
+  results = []
+  for i in year:
+      for j in period:
+        #key is the appropriate key to select the information we want
+        key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+        #get the object that we want from the API
+        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+        my_fund = fundamentals.reported_financials          
+               
+        #This dictionnary will contain all the information for one company
+        my_dict ={}
+        my_dict['ticker'] = ticker
+        my_dict['statement'] = statement
+        my_dict['year'] = i
+        my_dict['period'] = j
+    
+        for n in range(0, len(my_fund)):
+          my_dict[str(my_fund[n].xbrl_tag.tag)] = []
+    
+          # add values to the dictionary
+        for k in range(0, len(my_fund)):
+            for key, val in my_dict.items():
+                if my_fund[k].xbrl_tag.tag == key:
+                  my_dict[key].append(my_fund[k].value)
+                  my_dict[key] = [sum(my_dict[key])]
+            #print(float(my_dict[key][0]))
+        results.append(my_dict)            
+  return pd.DataFrame(results)
 
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
