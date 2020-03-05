@@ -3,8 +3,11 @@
 
 # Imports
 import pandas as pd
+import numpy as np
 import intrinio_sdk
 from datetime import datetime, timedelta
+from intrinio_sdk.rest import ApiException
+from pytest import raises
 
 # Function that gathers a given financial statement for a given company for a specified time
 def gather_financial_statement_time_series(api_key, ticker, statement, year, period):
@@ -31,25 +34,58 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
 
   Example
   -----------
-  >>> gather_financial_statement_time_series(api_key, 'CSCO', 'income_statement', ['2016','2017','2018'], ['Q1','Q2','Q3'])
+  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'])
   
   """  
+  ## Limited free access on intrino provides only Sandbox access
+    
+    # List of available tickers with sandbox key: 
+    # https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices
+
+  available_tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
+    
+  # https://data.intrinio.com/data-tags
+  available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']    
+    
+    ## Asserts    
+  if not type(api_key) is str:
+      raise TypeError("api_key has to be of type string")
+    
+  if not type(ticker) is str:
+      raise TypeError("Ticker has to be of type string")
+   
+  if not type(statement) is str:
+      raise TypeError("Statement has to be of type string")
+        
+  if not statement in available_statements:
+      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")    
+    
+  if not ticker in available_tickers:
+    raise Exception("Valid entries for ticker provided in the Readme.md")    
+    
+  if not type(year) is list:
+      raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
+    
+  if not type(period) is list:
+      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")     
+
   
   # Initialize API key
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
   fundamentals_api = intrinio_sdk.FundamentalsApi()
     
-  # Empty list to store results: reformat later
+  # Empty list to store results: reformat later to dataframe
   results = []
+  ## Outer loop over years, inner loop over quarters
   for i in year:
       for j in period:
-        #key is the appropriate key to select the information we want
+        # define key to obtain relevant information
         key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
-        #get the object that we want from the API
+        # Obtain req. object from API
         fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
         my_fund = fundamentals.reported_financials          
                
-        #This dictionnary will contain all the information for one company
+        # Empty dictionary to append the results : convert to df at the last stage
         my_dict ={}
         my_dict['ticker'] = ticker
         my_dict['statement'] = statement
@@ -59,13 +95,12 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
         for n in range(0, len(my_fund)):
           my_dict[str(my_fund[n].xbrl_tag.tag)] = []
     
-          # add values to the dictionary
+        # add values to the dictionary
         for k in range(0, len(my_fund)):
             for key, val in my_dict.items():
                 if my_fund[k].xbrl_tag.tag == key:
                   my_dict[key].append(my_fund[k].value)
                   my_dict[key] = [sum(my_dict[key])]
-            #print(float(my_dict[key][0]))
         results.append(my_dict)            
   return pd.DataFrame(results)
 
