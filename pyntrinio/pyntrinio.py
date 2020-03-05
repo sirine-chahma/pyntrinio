@@ -208,7 +208,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
     security_api = intrinio_sdk.SecurityApi()
     
     # put stock prices into a variable
-    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date).stock_prices
+    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
   except:
     print("Incorrect API Key - please input a valid API key as a string")
     return
