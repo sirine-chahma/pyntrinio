@@ -25,12 +25,10 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     the list of quarters for which you want information
   output_format : str (optional, default = 'dict')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe  
-
   Returns
   -----------
   pandas.core.frame.DataFrame
     a dataframe that contains the financial information for a given company for the mentioned period
-
   Example
   -----------
   >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
@@ -115,11 +113,11 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   #Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")
+      raise TypeError("Sorry, " + inst + " must be a string")
           
   #Check if ticker is a list
   if not isinstance(ticker, list):
-    raise Exception("Sorry, ticker must be a list")
+    raise TypeError("Sorry, ticker must be a list")
   
   #Check if the ticker is valid
   
