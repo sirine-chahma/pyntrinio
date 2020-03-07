@@ -190,54 +190,67 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   -----------
   >>> gather_stock_time_series(api_key, 'AAPL')
   """
-  try:
-    # change dates to datetime objects
-    if start_date is not None:
-      start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-    if end_date is not None:
-      end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-  except:
-    print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
-    return
+    # ensure the type of the ticker is a string
+    if type(ticker) != 'str':
+        print("Invalid Input: ticker has to be a string, e.g. 'APPL'")
+        return
+    
+    try:
+        # change dates to datetime objects
+        if start_date is not None:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        if end_date is not None:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    except:
+        print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
+        return
+    
+    if start_date >= end_date:
+        print("Invalid Input: end_date is earlier than start_date")
+        return
   
-  try:
-    # initialize API key
-    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+    try:
+        # initialize API key
+        intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
     
-    # initialize security API
-    security_api = intrinio_sdk.SecurityApi()
+    except:
+        print("Incorrect API Key - please input a valid API key as a string")
+        return
     
-    # put stock prices into a variable
-    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
-  except:
-    print("Incorrect API Key - please input a valid API key as a string")
-    return
+    try:
+        # initialize security API
+        security_api = intrinio_sdk.SecurityApi()
     
-  # initialize a results dictionary
-  results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
+        # put stock prices into a variable
+        stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
+    except:
+        print("An API Error occurred. Please try again.")
+    
+    # initialize a results dictionary
+    results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
             'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
 
-  # fill in dictionary
-  for i in list(range(0, len(stock_prices), 1)):
-      results['date'].append(stock_prices[i].date)
-      results['close'].append(stock_prices[i].close)
-      results['adj_close'].append(stock_prices[i].adj_close)
-      results['high'].append(stock_prices[i].high)
-      results['adj_high'].append(stock_prices[i].adj_high)
-      results['low'].append(stock_prices[i].low)
-      results['adj_low'].append(stock_prices[i].adj_low)
-      results['open'].append(stock_prices[i].open)
-      results['adj_open'].append(stock_prices[i].adj_open)
-      results['volume'].append(stock_prices[i].volume)
-      results['adj_volume'].append(stock_prices[i].adj_volume)
-      results['frequency'].append(stock_prices[i].frequency)
-      results['intraperiod'].append(stock_prices[i].intraperiod)
+    # fill in dictionary
+    for i in list(range(0, len(stock_prices), 1)):
+        results['date'].append(stock_prices[i].date)
+        results['close'].append(stock_prices[i].close)
+        results['adj_close'].append(stock_prices[i].adj_close)
+        results['high'].append(stock_prices[i].high)
+        results['adj_high'].append(stock_prices[i].adj_high)
+        results['low'].append(stock_prices[i].low)
+        results['adj_low'].append(stock_prices[i].adj_low)
+        results['open'].append(stock_prices[i].open)
+        results['adj_open'].append(stock_prices[i].adj_open)
+        results['volume'].append(stock_prices[i].volume)
+        results['adj_volume'].append(stock_prices[i].adj_volume)
+        results['frequency'].append(stock_prices[i].frequency)
+        results['intraperiod'].append(stock_prices[i].intraperiod)
     
-  # if the ouput format is a dataframe, change to that
-  if output_format == 'pddf':
-      results = pd.DataFrame(results)
+    # if the ouput format is a dataframe, change to that
+    if output_format == 'pddf':
+        results = pd.DataFrame(results)
     
-  return results
+    return results
 
 
 # Function that calculates the stock returns
