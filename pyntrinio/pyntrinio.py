@@ -231,7 +231,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
             'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
 
     # fill in dictionary
-    for i in list(range(0, len(stock_prices), 1)):
+    for i in range(0, len(stock_prices)):
         results['date'].append(stock_prices[i].date)
         results['close'].append(stock_prices[i].close)
         results['adj_close'].append(stock_prices[i].adj_close)
