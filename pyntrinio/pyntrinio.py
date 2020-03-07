@@ -40,14 +40,7 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'])
   >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'], output_format = 'dict')
   
-  """  
-  ## Limited free access on intrino provides only Sandbox access
-    
-    # List of available tickers with sandbox key: 
-    # https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices
-
-  available_tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
-    
+  """   
   # https://data.intrinio.com/data-tags
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
@@ -66,9 +59,6 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   if not statement in available_statements:
       raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")    
     
-  if not ticker in available_tickers:
-    raise Exception("Valid entries for ticker provided in the Readme.md")    
-
   ## Check the type of year and period as list  
   if not type(year) is list:
       raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
