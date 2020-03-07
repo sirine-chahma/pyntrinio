@@ -37,42 +37,44 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
 
   Example
   -----------
-  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'])
-  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'], output_format = 'dict')
+  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
+  """
   
-  """   
   # https://data.intrinio.com/data-tags
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
   inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
     
-  ## Check if api_key, ticker and statement are strings
+  # Check if api_key, ticker and statement are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")
+      raise Exception("Invalid data format: " + inst + " must be a string")
       return
     
-  ## Check if the output_format is either 'dict' or 'pddf' 
+  # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
-    raise Exception("Sorry, output_format must be 'dict' or 'pddf'")
+    raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
     return
-        
+  
+  # Check that the value of statement is valid     
   if not statement in available_statements:
-      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")
+      raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
       return
     
-  ## Check the type of year and period as list  
+  # Check that year is a list
   if not type(year) is list:
-      raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
+      raise TypeError("Invalid data format: year must be a list of strings")
       return
     
+  # Check that period is a list  
   if not type(period) is list:
-      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")   
+      raise TypeError("Invalid data format: period must be a list of strings")   
       return
-
+  
+  # Check that the length of year is 4
   for y in year:
     if not len(y)== 4:
-      raise Exception("Sorry, year must be a string of 4 digits")
+      raise Exception("Invalid data format: year must be a string of 4 digits")
       return
 
   # Initialize API key
@@ -91,7 +93,7 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
           # put stock prices into a variable
           fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
         except:
-          print("Incorrect API Key - please input a valid API key as a string")
+          print("Invalid API Key: please input a valid API key as a string")
           return
         
         my_fund = fundamentals.reported_financials          
@@ -117,7 +119,6 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   final_df = pd.DataFrame(results)
 
   ## if_else for output format
-    
   if output_format == 'pddf':
       return final_df
   else:
@@ -153,6 +154,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   Example
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
+<<<<<<< HEAD
   """    
 
   statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
@@ -166,6 +168,9 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   #Check if ticker is a list
   if not isinstance(ticker, list):
     raise TypeError("Sorry, ticker must be a list")
+=======
+  """
+>>>>>>> 4c84940ca8070fcab5637927e4740ff900d53c4a
   
   #Check if the year is a 4-digits number
   if not len(year)==4:
@@ -392,7 +397,6 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   Example
   -----------
   >>> gather_stock_returns(api_key, ['AAPL', 'CSCO'], "2017-12-31", "2019-03-01")
-  
   """
   
   # test whether the input dates are in the right format
