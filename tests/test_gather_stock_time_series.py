@@ -1,25 +1,24 @@
 import pyntrinio
+import pandas as pd
 from datetime import datetime
 
 # helper data
 api_key = 'OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1'
 ticker = 'AAPL'
-start_date = '2005-03-01' 
-end_date = '2020-01-15' 
 
 # test that return type is dictionary by default
 def test_default_output_type():
     """
     Test that return type is dictionary by default
     """
-    assert type(gather_stock_time_series(api_key, ticker)) == 'dict'
+    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25")) == 'dict'
 
 # test that return type is a pandas dataframe when specified
 def test_pddf_output_type():
     """
     Test that return type is a pandas dataframe when specified
     """
-    assert type(gather_stock_time_series(api_key, ticker, output_format='pddf')) == 'pandas.core.frame.DataFrame'
+    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25", output_format='pddf')) == 'pandas.core.frame.DataFrame'
 
 # test that you get an error when you put in an incorrect API key
 def api_key_test():
@@ -27,7 +26,15 @@ def api_key_test():
     Give a wrong api_key, see if the function correctly handles the exception.
     """
     msg = "Incorrect API Key - please input a valid API key as a string"
-    assert gather_stock_time_series('wrong api key!!', ticker) == msg
+    assert gather_stock_time_series('wrong api key!!', ticker, start_date="2020-01-15", end_date="2020-01-25") == msg
+    
+# test that you get an error when you put in an incorrect ticker format
+def ticker_format_test():
+    """
+    Give a wrong ticker format, see if the function correctly handles the exception.
+    """
+    msg = "Invalid Input: ticker has to be a string, e.g. 'APPL'"
+    assert gather_stock_time_series(api_key, 123, start_date="2020-01-15", end_date="2020-01-25") == msg
 
 # test that you get an error when you put in an invalid date format
 def date_format_test():
@@ -35,7 +42,7 @@ def date_format_test():
     See if the function correctly handles the input dates in wrong formats.
     """
     msg = "Invalid Date format - please input the date as a string with format %Y-%m-%d"
-    assert gather_stock_time_series(api_key, ticker, '2018-15-12') == msg
+    assert gather_stock_time_series(api_key, ticker, start_date='2018-15-12') == msg
 
 # test that you get an error when the end date is before the start date
 def test_start_date_prior_to_end_date():
@@ -43,21 +50,21 @@ def test_start_date_prior_to_end_date():
     Test that you get an error when the end date is before the start date
     """
     msg = "Please choose a start date that is before the end date"
-    assert type(gather_stock_time_series(api_key, ticker, start_date=end_date, end_date=start_date)) == msg
+    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15")) == msg
 
 # test that you get a valid output shape when you put in no start date
 def test_end_date_only_shape():
     """
     Test that you get a valid output shape when you put in no start date
     """
-    assert gather_stock_time_series(api_key, ticker, end_date=end_date, output_format='pddf').shape[0] > 0
+    assert gather_stock_time_series(api_key, ticker, end_date="2020-01-25", output_format='pddf').shape[0] > 0
 
 # test that you get a valid output shape when you put in no end date
 def test_start_date_only_shape():
     """
     Test that you get a valid output shape when you put in no end date
     """
-    assert gather_stock_time_series(api_key, ticker, start_date=start_date, output_format='pddf').shape[0] > 0
+    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-15", output_format='pddf').shape[0] > 0
 
 # test that you get a valid output shape when you don't put in a start or end date
 def test_no_dates_shape():
