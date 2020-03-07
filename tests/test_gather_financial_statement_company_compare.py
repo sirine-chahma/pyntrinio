@@ -1,4 +1,6 @@
 from pyntrinio.pyntrinio import gather_financial_statement_company_compare
+from pytest import raises
+import pandas as pd
 """
 This script tests the gather_financial_statement_company_compare functions in the pyntrinio module.
 """
@@ -44,10 +46,13 @@ def test_output():
     '''
     Tests if the output seems right (type, dimension and one value)
     ''' 
-
+    api_key = 'OmEzNGY3MGEwMDIwZGM5Y2UxNDZhNzUzMTgzYTJiNWI2'
+    ticker = ['AAPL', 'CSCO']
+    statement = 'income_statement'
+    year = '2014'
+    period = 'Q1'
     result_dic = gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict')
     result_df = gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='pddf')
-
     #Check that the type of the output is the right one
     assert(type(result_dic) == list)
     assert(type(result_df) == pd.core.frame.DataFrame)

@@ -177,8 +177,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
         else : 
            value = dict[tag]['value'] + value
       dict[tag] = {'value' : value, 'balance': balance, 'name': name}
-          
-      result.append(dict)
+    result.append(dict)
       
   if output_format == 'dict':
     return result
