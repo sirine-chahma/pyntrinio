@@ -191,7 +191,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   >>> gather_stock_time_series(api_key, 'AAPL')
   """
     # ensure the type of the ticker is a string
-    if type(ticker) != 'str':
+    if type(ticker) != str:
         print("Invalid Input: ticker has to be a string, e.g. 'APPL'")
         return
     
@@ -217,21 +217,18 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
         print("Incorrect API Key - please input a valid API key as a string")
         return
     
-    try:
-        # initialize security API
-        security_api = intrinio_sdk.SecurityApi()
+    # initialize security API
+    security_api = intrinio_sdk.SecurityApi()
     
-        # put stock prices into a variable
-        stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
-    except:
-        print("An API Error occurred. Please try again.")
+    # put stock prices into a variable
+    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
     
     # initialize a results dictionary
     results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
             'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
 
     # fill in dictionary
-    for i in range(0, len(stock_prices)):
+    for i in list(range(0, len(stock_prices), 1)):
         results['date'].append(stock_prices[i].date)
         results['close'].append(stock_prices[i].close)
         results['adj_close'].append(stock_prices[i].adj_close)
