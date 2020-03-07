@@ -49,33 +49,27 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
       raise Exception("Invalid data format: " + inst + " must be a string")
-      return
     
   # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
     raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
-    return
   
   # Check that the value of statement is valid     
   if not statement in available_statements:
       raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
-      return
     
   # Check that year is a list
   if not type(year) is list:
       raise TypeError("Invalid data format: year must be a list of strings")
-      return
     
   # Check that period is a list  
   if not type(period) is list:
-      raise TypeError("Invalid data format: period must be a list of strings")   
-      return
+      raise TypeError("Invalid data format: period must be a list of strings")
   
   # Check that the length of year is 4
   for y in year:
     if not len(y)== 4:
       raise Exception("Invalid data format: year must be a string of 4 digits")
-      return
 
   # Initialize API key
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -154,71 +148,71 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   Example
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
-<<<<<<< HEAD
   """    
 
   statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
 
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
-  #Check if api_key, statement, year, period are strings
+  # Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise TypeError("Sorry, " + inst + " must be a string")
+      raise TypeError("Invalid data format: " + inst + " must be a string")
           
-  #Check if ticker is a list
+  # Check if ticker is a list
   if not isinstance(ticker, list):
-    raise TypeError("Sorry, ticker must be a list")
-=======
-  """
->>>>>>> 4c84940ca8070fcab5637927e4740ff900d53c4a
+    raise TypeError("Invalid data format: ticker must be a list of strings")
   
-  #Check if the year is a 4-digits number
+  # Check if the year is a 4-digits number
   if not len(year)==4:
-    raise Exception("Sorry, year must be a string with 4 digits")
+    raise Exception("Invalid data format: year must be a string of 4 digits")
   
 
-  #Check if the output_format is either 'dict' or 'pddf' 
+  # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
-    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+    raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
 
-  #Check if the statement is valid
+  # Check if the statement is valid
   if not statement in statements:
-    raise Exception('Sorry, the statement is not correct')
+    raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
   
   
-  #link with the API
+  # link with the API
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
   fundamentals_api = intrinio_sdk.FundamentalsApi()
   
-  #result will contain a dictionnary for each company.
-  #This dictionnary will contain all the information for one company
+  # result will contain a dictionnary for each company.
+  # This dictionnary will contain all the information for one company
   result = []
 
-  #for every company
+  # for every company
   for comp in ticker : 
-    #key is the appropriate key to select the information we want
+    # key is the appropriate key to select the information we want
     key = comp + '-' + str(statement) + '-' + str(year) + '-' + str(period)
-    #get the object that we want from the API
-    fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+    try:
+      # get the object that we want from the API
+      fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+    except:
+      print("Invalid API Key: please input a valid API key as a string")
+      return
     my_fund = fundamentals.reported_financials
 
-    #This dictionnary will contain all the information for one company
+    # This dictionary will contain all the information for one company
     dict ={}
     dict['ticker'] = comp
     dict['statement'] = statement
     dict['year'] = year
     dict['period'] = period
       
-    #we store all the values, balances, names and the tags
+    # we store all the values, balances, names and the tags
     for i in range(len(my_fund)):
       value = my_fund[i].value
       tag_dic = my_fund[i].xbrl_tag
       balance = tag_dic.balance
       name = tag_dic.name
       tag = tag_dic.tag
-      #tag is a key of this dictionnary
+      # tag is a key of this dictionnary
           
-      #if the tag is several times in the original object, we keep one tag and the 
+      # if the tag is several times in the original object, we keep one tag and the 
       # value is the sum or the substraction of all the values of this tag 
       # (depending on the value of balance) 
       if tag in dict.keys():
@@ -232,53 +226,53 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   if output_format == 'dict':
     return result
   
-  #if the wanted type of the output is a dataframe
+  # if the wanted type of the output is a dataframe
   else:
-    #initialize a new empty dictionnary that we will convert into a dataframe
-    #this dictionnary will have the following structure
+    # initialize a new empty dictionnary that we will convert into a dataframe
+    # this dictionnary will have the following structure
     # {'name': [name1, name2], 'revenue' : [revenu_company_1, revenue_company_2], ...}
     df = {}
     
-    #for every company
+    # for every company
     for i in range(len(result)):
           
-      #select all the information about this company
+      #s elect all the information about this company
       sub_dict = result[i]
             
-      #For all the tags that we have for this company
+      # For all the tags that we have for this company
       for val in sub_dict.keys():
                 
-        #if the key is already in the df dictionnary
+        # if the key is already in the df dictionnary
         if val in df.keys():
                   
-          #if the value that corresponds to the key is a string 
+          # if the value that corresponds to the key is a string 
           # which means that the key is 'ticker', 'statement', 'year' or 'period'
           if type(sub_dict[val]) == str:
                         
-            #We appen the value of the key
+            # We appen the value of the key
             df[val].append(sub_dict[val])
                         
-          #if the value of the key is a dictionnary
+          # if the value of the key is a dictionnary
           else:
                         
-            #only take the value that corresponds to the key 'value'
+            # only take the value that corresponds to the key 'value'
             df[val].append(sub_dict[val]['value'])
                 
-        #This step is to make sure that all the values in this dictionnary
+        # This step is to make sure that all the values in this dictionnary
         # (which are lists) are the same length
-        #if the tag of the company is not already in the df dictionnary
+        # if the tag of the company is not already in the df dictionnary
         else:
 
           if type(sub_dict[val]) == str:
-            #We have to put as many 'None' as the number of companies for 
+            # We have to put as many 'None' as the number of companies for 
             # which we already collected the information 
             df[val] = [None for j in range(i)] + [sub_dict[val]]
           else:
             df[val] = [None for j in range(i)] + [sub_dict[val]['value']]
       # We add some 'None' to make sure that all the values are the same 
-      #length in this dictionnary
+      # length in this dictionnary
       for val in df.keys():
-        #The length of each value should be i+1 (=number of companies we studied)
+        # The length of each value should be i+1 (=number of companies we studied)
         if len(df[val]) != i+1:
           df[val].append(None)
                   
