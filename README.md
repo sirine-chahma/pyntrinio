@@ -53,6 +53,7 @@ Before using any functions included in this package, you must sign up for an app
 2. In the left hand menu, select `API KEYS`
 3. Copy your relevant API Key. Note that this is unique to you and should not be shared.
 
+If you are using a free version of Intrinio for educational purposes, please note that you will only have access to the [Developer Sandbox](https://product.intrinio.com/developer-sandbox) so use that API key in functions.
 
 Python 3.7.3 and Python packages:
 
