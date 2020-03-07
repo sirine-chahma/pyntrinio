@@ -34,44 +34,6 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   Example
   -----------
   >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
-  {'AAPL' : [
-  {'ticker': ['AAPL'],
-  'year': ['2018'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [16145000000.0],
-  'CostOfGoodsAndServicesSold': [104262000000.0],
-  'GrossProfit': [21078007000.0],
-  'ResearchAndDevelopmentExpense': [396090000.0],
-  'SellingGeneralAndAdministrativeExpense': [482045600.0],
-  'OperatingExpenses': [7899000000.0],
-  'OperatingIncomeLoss': [2388230000.0],
-  'NonoperatingIncomeExpense': [470000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [13906050000.0],
-  'IncomeTaxExpenseBenefit': [3986500000.0],
-  'NetIncomeLoss': [20970000000.0],
-  'EarningsPerShareBasic': [4.17],
-  'EarningsPerShareDiluted': [4.13],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4658920000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4874252000.0]},
-  {'ticker': ['AAPL'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
-  'CostOfGoodsAndServicesSold': [104558000000.0],
-  'GrossProfit': [32031000000.0],
-  'ResearchAndDevelopmentExpense': [3902000000.0],
-  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
-  'OperatingExpenses': [8685000000.0],
-  'OperatingIncomeLoss': [23346000000.0],
-  'NonoperatingIncomeExpense': [560000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
-  'IncomeTaxExpenseBenefit': [3941000000.0],
-  'NetIncomeLoss': [19965000000.0],
-  'EarningsPerShareBasic': [4.22],
-  'EarningsPerShareDiluted': [4.18],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]}
-  ]}  
   """
   
   if output_format=='dict':
@@ -110,48 +72,6 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   Example
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
-  {'AAPL' : {'ticker': ['AAPL'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
-  'CostOfGoodsAndServicesSold': [104558000000.0],
-  'GrossProfit': [32031000000.0],
-  'ResearchAndDevelopmentExpense': [3902000000.0],
-  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
-  'OperatingExpenses': [8685000000.0],
-  'OperatingIncomeLoss': [23346000000.0],
-  'NonoperatingIncomeExpense': [560000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
-  'IncomeTaxExpenseBenefit': [3941000000.0],
-  'NetIncomeLoss': [19965000000.0],
-  'EarningsPerShareBasic': [4.22],
-  'EarningsPerShareDiluted': [4.18],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]},
- 'CSCO' : {'ticker': ['CSCO'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [26145000000.0],
-  'CostOfGoodsAndServicesSold': [9852000000.0],
-  'GrossProfit': [8146000000.0],
-  'ResearchAndDevelopmentExpense': [1608000000.0],
-  'SellingAndMarketingExpense': [2410000000.0],
-  'GeneralAndAdministrativeExpense': [211000000.0],
-  'AmortizationOfIntangibleAssets': [34000000.0],
-  'RestructuringAndOtherCharges': [78000000.0],
-  'OperatingExpenses': [4341000000.0],
-  'OperatingIncomeLoss': [3805000000.0],
-  'InvestmentIncomeInterestAndDividend': [344000000.0],
-  'InterestExpense': [221000000.0],
-  'OtherNonoperatingIncomeExpense': [-19000000.0],
-  'NonoperatingIncomeExpense': [104000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [3909000000.0],
-  'IncomeTaxExpenseBenefit': [360000000.0],
-  'NetIncomeLoss': [3549000000.0],
-  'EarningsPerShareBasic': [0.78],
-  'EarningsPerShareDiluted': [0.77],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4565000000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4614000000.0]}}
   """
   
   if output_format=='dict':
@@ -273,7 +193,6 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   Example
   -----------
   >>> gather_stock_returns(api_key, ['AAPL', 'CSCO'], "2017-12-31", "2019-03-01")
-  
   """
   
   # test whether the input dates are in the right format
