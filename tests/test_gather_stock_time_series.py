@@ -35,6 +35,7 @@ def ticker_format_test():
     """
     msg = "Invalid Input: ticker has to be a string, e.g. 'APPL'"
     assert gather_stock_time_series(api_key, 123, start_date="2020-01-15", end_date="2020-01-25") == msg
+    assert gather_stock_time_series(api_key, ["AAPL", "CSCO"], start_date="2020-01-15", end_date="2020-01-25") == msg
 
 # test that you get an error when you put in an invalid date format
 def date_format_test():
@@ -92,4 +93,3 @@ def test_output():
     'frequency': ['daily', 'daily', 'daily'],
     'intraperiod': [False, False, False]}
     assert gather_stock_time_series(api_key, ticker, start_date='2020-01-15', end_date='2020-01-17') == results
-
