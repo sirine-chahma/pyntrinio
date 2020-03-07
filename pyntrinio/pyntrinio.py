@@ -3,13 +3,17 @@
 
 # Imports
 import pandas as pd
+import numpy as np
 import intrinio_sdk
 from datetime import datetime, timedelta
+from intrinio_sdk.rest import ApiException
+from pytest import raises
 
 # Function that gathers a given financial statement for a given company for a specified time
-def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format='dict'): 
+# Function that gathers a given financial statement for a given company for a specified time
+def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format = 'pddf'):
   """
-  Given the tickers, statement, year and period returns all the financial information from the Intrinio API stock data
+  Given the tickers, statement, year and period returns the complete financial information from the Intrinio API stock data
   
   Parameters
   -----------
@@ -22,64 +26,103 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   year : list
     the list containing the years as strings
   period : list
-    the list of quarters for which you want information
-  output_format : str (optional, default = 'dict')
-    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe  
+    the list of quarters (as strings) for which you want information
+  output_format : str (optional, default = 'pddf')
+    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
 
   Returns
   -----------
-  pandas.core.frame.DataFrame
-    a dataframe that contains the financial information for a given company for the mentioned period
+  dictionary or pandas.core.frame.DataFrame
+    a dictionary/dataframe that contains the financial information for a given company for the mentioned year(s) & period(s)
 
   Example
   -----------
-  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
-  {'AAPL' : [
-  {'ticker': ['AAPL'],
-  'year': ['2018'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [16145000000.0],
-  'CostOfGoodsAndServicesSold': [104262000000.0],
-  'GrossProfit': [21078007000.0],
-  'ResearchAndDevelopmentExpense': [396090000.0],
-  'SellingGeneralAndAdministrativeExpense': [482045600.0],
-  'OperatingExpenses': [7899000000.0],
-  'OperatingIncomeLoss': [2388230000.0],
-  'NonoperatingIncomeExpense': [470000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [13906050000.0],
-  'IncomeTaxExpenseBenefit': [3986500000.0],
-  'NetIncomeLoss': [20970000000.0],
-  'EarningsPerShareBasic': [4.17],
-  'EarningsPerShareDiluted': [4.13],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4658920000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4874252000.0]},
-  {'ticker': ['AAPL'],
-  'year': ['2019'],
-  'period': ['Q1'],
-  'RevenueFromContractWithCustomerExcludingAssessedTax': [168620000000.0],
-  'CostOfGoodsAndServicesSold': [104558000000.0],
-  'GrossProfit': [32031000000.0],
-  'ResearchAndDevelopmentExpense': [3902000000.0],
-  'SellingGeneralAndAdministrativeExpense': [4783000000.0],
-  'OperatingExpenses': [8685000000.0],
-  'OperatingIncomeLoss': [23346000000.0],
-  'NonoperatingIncomeExpense': [560000000.0],
-  'IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest': [23906000000.0],
-  'IncomeTaxExpenseBenefit': [3941000000.0],
-  'NetIncomeLoss': [19965000000.0],
-  'EarningsPerShareBasic': [4.22],
-  'EarningsPerShareDiluted': [4.18],
-  'WeightedAverageNumberOfSharesOutstandingBasic': [4735820000.0],
-  'WeightedAverageNumberOfDilutedSharesOutstanding': [4773252000.0]}
-  ]}  
-  """
+  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'])
+  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'], output_format = 'dict')
   
-  if output_format=='dict':
-    results={}
+  """  
+  ## Limited free access on intrino provides only Sandbox access
+    
+    # List of available tickers with sandbox key: 
+    # https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices
+
+  available_tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
+    
+  # https://data.intrinio.com/data-tags
+  available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
+
+  inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
+    
+  ## Check if api_key, ticker and statement are strings
+    
+  for inst in inputs.keys():
+    if not isinstance(inputs[inst], str):
+      raise Exception("Sorry, " + inst + " must be a string")    
+    
+  ## Check if the output_format is either 'dict' or 'pddf' 
+  if not output_format in ['dict', 'pddf']:
+    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+        
+  if not statement in available_statements:
+      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")    
+    
+  if not ticker in available_tickers:
+    raise Exception("Valid entries for ticker provided in the Readme.md")    
+
+  ## Check the type of year and period as list  
+  if not type(year) is list:
+      raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
+    
+  if not type(period) is list:
+      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")     
+
+  for y in year:
+    if not len(y)== 4:
+      raise Exception("Sorry, year must be a string of 4 digits")
+
+  ## Tests Over ##  
+
+  # Initialize API key
+  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+  fundamentals_api = intrinio_sdk.FundamentalsApi()
+    
+  # Empty list to store results: reformat later to dataframe
+  results = []
+  ## Outer loop over years, inner loop over quarters
+  for i in year:
+      for j in period:
+        # define key to obtain relevant information
+        key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+        # Obtain req. object from API
+        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+        my_fund = fundamentals.reported_financials          
+               
+        # Empty dictionary to append the results : convert to df at the last stage
+        my_dict ={}
+        my_dict['ticker'] = ticker
+        my_dict['statement'] = statement
+        my_dict['year'] = i
+        my_dict['period'] = j
+    
+        for n in range(0, len(my_fund)):
+          my_dict[str(my_fund[n].xbrl_tag.tag)] = []
+    
+        # add values to the dictionary
+        for k in range(0, len(my_fund)):
+            for key, val in my_dict.items():
+                if my_fund[k].xbrl_tag.tag == key:
+                  my_dict[key].append(my_fund[k].value)
+                  my_dict[key] = [sum(my_dict[key])]
+        results.append(my_dict)
+
+  final_df = pd.DataFrame(results)
+
+  ## if_else for output format
+    
+  if output_format == 'pddf':
+      return final_df
   else:
-    results=pd.DataFrame(results)
-  
-  return results
+      return results
 
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
