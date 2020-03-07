@@ -26,6 +26,7 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   year : list
     the list containing the years as strings
   period : list
+
     the list of quarters (as strings) for which you want information
   output_format : str (optional, default = 'pddf')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
@@ -144,19 +145,18 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
   """    
+
+  statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
+
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
   #Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")
+      raise TypeError("Sorry, " + inst + " must be a string")
           
   #Check if ticker is a list
   if not isinstance(ticker, list):
-    raise Exception("Sorry, ticker must be a list")
-  
-  #Check if the ticker is valid
-  
-  #Check if the statement if valid
+    raise TypeError("Sorry, ticker must be a list")
   
   #Check if the year is a 4-digits number
   if not len(year)==4:
@@ -166,6 +166,10 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   #Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
     raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+
+  #Check if the statement is valid
+  if not statement in statements:
+    raise Exception('Sorry, the statement is not correct')
   
   
   #link with the API
@@ -209,8 +213,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
         else : 
            value = dict[tag]['value'] + value
       dict[tag] = {'value' : value, 'balance': balance, 'name': name}
-          
-      result.append(dict)
+    result.append(dict)
       
   if output_format == 'dict':
     return result

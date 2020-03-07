@@ -22,8 +22,22 @@ Python is an object-oriented programming language, which has allowed contributor
 pip install -i https://test.pypi.org/simple/ pyntrinio
 ```
 
-### Features
-- TODO
+## Coverage
+
+To get the line coverage, run the following command line code :
+
+```{}
+poetry add --dev pytest-cov
+poetry run pytest --cov=pyntrinio
+```
+
+
+To get the branch coverage, run the following command line code:
+
+```{}
+poetry add --dev pytest-cov
+poetry run pytest --cov-branch --cov=pyntrinio
+```
 
 ### Functions
 1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
