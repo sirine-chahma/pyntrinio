@@ -58,12 +58,9 @@ If you are using a free version of Intrinio for educational purposes, please not
 Python 3.7.3 and Python packages:
 
 - pandas==0.24.2
-- altair==3.2.0
 - intrinio-sdk==5.1.0
-
-### Usage
-
-- TODO
+- pytest==5.3.5
+- python-dateutil==2.8.1
 
 ### Documentation
 The official documentation is hosted on Read the Docs: <https://pyntrinio.readthedocs.io/en/latest/>
@@ -72,4 +69,12 @@ The official documentation is hosted on Read the Docs: <https://pyntrinio.readth
 This package was created with Cookiecutter and the UBC-MDS/cookiecutter-ubc-mds project template, modified from the [pyOpenSci/cookiecutter-pyopensci](https://github.com/pyOpenSci/cookiecutter-pyopensci) project template and the [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage).
 
 ### References
-(2007). Retrieved from intrinio.com
+
+McKinney, W., & others. (2010). Data structures for statistical computing in python. In Proceedings of the 9th Python in Science Conference (Vol. 445, pp. 51–56).
+
+Oliphant, T. E. (2006). A guide to NumPy (Vol. 1). Trelgol Publishing USA.
+
+Swagger Codegen community. 2020. *IntrinioSDK: Python Package Client for
+Intrinio Api*.
+
+Van Rossum, G., & Drake, F. L. (2009). Python 3 Reference Manual. Scotts Valley, CA: CreateSpace.
