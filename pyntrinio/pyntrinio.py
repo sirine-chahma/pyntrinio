@@ -10,7 +10,6 @@ from intrinio_sdk.rest import ApiException
 from pytest import raises
 
 # Function that gathers a given financial statement for a given company for a specified time
-# Function that gathers a given financial statement for a given company for a specified time
 def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format = 'pddf'):
   """
   Given the tickers, statement, year and period returns the complete financial information from the Intrinio API stock data
@@ -23,18 +22,18 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     the ticker symbol you would like to get information for
   statement : str
     the statement that you want to study
+    options: 'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
   year : list
     the list containing the years as strings
   period : list
-
     the list of quarters (as strings) for which you want information
   output_format : str (optional, default = 'pddf')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
 
   Returns
   -----------
-  dictionary or pandas.core.frame.DataFrame
-    a dictionary/dataframe that contains the financial information for a given company for the mentioned year(s) & period(s)
+  object of type output_format
+    information about the given statement for the given ticker at the given times in the specified output format
 
   Example
   -----------
@@ -48,30 +47,33 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
     
   ## Check if api_key, ticker and statement are strings
-    
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")    
+      raise Exception("Sorry, " + inst + " must be a string")
+      return
     
   ## Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
-    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+    raise Exception("Sorry, output_format must be 'dict' or 'pddf'")
+    return
         
   if not statement in available_statements:
-      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")    
+      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")
+      return
     
   ## Check the type of year and period as list  
   if not type(year) is list:
       raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
+      return
     
   if not type(period) is list:
-      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")     
+      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")   
+      return
 
   for y in year:
     if not len(y)== 4:
       raise Exception("Sorry, year must be a string of 4 digits")
-
-  ## Tests Over ##  
+      return
 
   # Initialize API key
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -85,7 +87,13 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
         # define key to obtain relevant information
         key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
         # Obtain req. object from API
-        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+        try:
+          # put stock prices into a variable
+          fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+        except:
+          print("Incorrect API Key - please input a valid API key as a string")
+          return
+        
         my_fund = fundamentals.reported_financials          
                
         # Empty dictionary to append the results : convert to df at the last stage
@@ -129,6 +137,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
     a list of the ticker symbols you would like to study
   statement : str
     the statement that you want to study
+    options: 'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
   year : str
     the year you want the information from
   period : str
