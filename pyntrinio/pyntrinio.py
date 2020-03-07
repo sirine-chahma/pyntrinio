@@ -397,10 +397,10 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     buy_date = datetime.strptime(buy_date, '%Y-%m-%d').date()
     sell_date = datetime.strptime(sell_date, '%Y-%m-%d').date()
     if buy_date >= sell_date:
-      print("Invalid Input: `sell_date` is earlier than `buy_date`.")
+      print("Invalid Input: sell_date must be later than buy_date")
       return
   except:
-    print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
+    print("Invalid Date format: date must be a string in the format %Y-%m-%d")
     return
   
   if type(ticker) == str: # if user gives just one ticker
@@ -416,7 +416,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   try:
     security_api.get_security_stock_prices(ticker[0], start_date=buy_date, end_date=sell_date)
   except:
-    print("Incorrect API Key - please input a valid API key as a string")
+    print("Invalid API Key: please input a valid API key as a string")
     return
 
   # create the result DataFrame to record and report
