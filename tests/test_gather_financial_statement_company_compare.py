@@ -35,9 +35,9 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, 'AAPL', statement, year, period)
 
-    #Check is the names in the tickers are valid
-        with raises(Exception):
-            gather_financial_statement_company_compare(api_key, 'AAAAPL', statement, year, period)
+    #Check if the statement is valid
+    with raises(Exception):
+        gather_financial_statement_company_compare(api_key, ticker, 'a_statement', year, period)
     
     
 def test_output():

@@ -110,7 +110,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
   """    
 
-  tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
+  statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
 
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
   #Check if api_key, statement, year, period are strings
@@ -131,10 +131,9 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   if not output_format in ['dict', 'pddf']:
     raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
 
-  #Check if the names in the ticker are valid
-  for tick in tickers:
-    if not tick in tickers:
-      raise Exception('Sorry, the names in the ticker are not correct')
+  #Check if the statement is valid
+  if not statement in statements:
+    raise Exception('Sorry, the statement is not correct')
   
   
   #link with the API
