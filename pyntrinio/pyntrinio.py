@@ -109,6 +109,9 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
   """    
+
+  tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
+
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
   #Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
@@ -119,10 +122,6 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   if not isinstance(ticker, list):
     raise TypeError("Sorry, ticker must be a list")
   
-  #Check if the ticker is valid
-  
-  #Check if the statement if valid
-  
   #Check if the year is a 4-digits number
   if not len(year)==4:
     raise Exception("Sorry, year must be a string with 4 digits")
@@ -131,6 +130,11 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   #Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
     raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+
+  #Check if the names in the ticker are valid
+  for tick in tickers:
+    if not tick in tickers:
+      raise Exception('Sorry, the names in the ticker are not correct')
   
   
   #link with the API

@@ -13,6 +13,7 @@ def test_type_input():
     statement = 'income_statement'
     year = '2014'
     period = 'Q1'
+    tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
     
     #Check that when the api_key is not a string, it returns an error
     with raises(TypeError):
@@ -33,6 +34,10 @@ def test_type_input():
     #Check that when the ticker is not a list, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, 'AAPL', statement, year, period)
+
+    #Check is the names in the tickers are valid
+        with raises(Exception):
+            gather_financial_statement_company_compare(api_key, 'AAAAPL', statement, year, period)
     
     
 def test_output():
