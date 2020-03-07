@@ -279,7 +279,6 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   return pd.DataFrame(df)
                     
 
-
 # Function that gathers time series data of stock values
 def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict'):
   """
@@ -310,7 +309,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   """
     # ensure the type of the ticker is a string
     if type(ticker) != str:
-        print("Invalid Input: ticker has to be a string, e.g. 'APPL'")
+        print("Invalid data format: ticker must be a string")
         return
     
     try:
@@ -320,11 +319,11 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
         if end_date is not None:
             end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
     except:
-        print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
+        print("Invalid Date format: date must be a string in the format %Y-%m-%d")
         return
     
     if start_date is not None and end_date is not None and start_date >= end_date:
-        print("Invalid Input: end_date is earlier than start_date")
+        print("Invalid Input: end_date must be later than start_date")
         return
   
     # initialize API key
@@ -337,7 +336,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
         # put stock prices into a variable
         stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
     except:
-        print("Incorrect API Key - please input a valid API key as a string")
+        print("Invalid API Key: please input a valid API key as a string")
         return
     
     # initialize a results dictionary
