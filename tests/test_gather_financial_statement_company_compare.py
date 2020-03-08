@@ -1,3 +1,6 @@
+# Author: Team Andrey Markov
+# tests for gather_financial_statement_company_compare
+
 from pyntrinio.pyntrinio import gather_financial_statement_company_compare
 from pytest import raises
 import pandas as pd

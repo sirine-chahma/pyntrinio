@@ -1,3 +1,6 @@
+# Author: Team Andrey Markov
+# tests for gather_stock_returns
+
 from pyntrinio.pyntrinio import gather_stock_returns
 
 # helper data

@@ -1,4 +1,7 @@
-import pyntrinio
+# Author: Team Andrey Markov
+# tests for gather_stock_time_series
+
+from pyntrinio.pyntrinio import gather_stock_time_series
 import pandas as pd
 from datetime import datetime
 

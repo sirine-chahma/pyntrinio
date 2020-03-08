@@ -1,3 +1,6 @@
+# Author: Team Andrey Markov
+# tests for gather_financial_statement_time_series
+
 ## Reference: https://ubc-mds.github.io/py-pkgs/testing.html#pytest-tests
 
 from pyntrinio.pyntrinio import gather_financial_statement_time_series
