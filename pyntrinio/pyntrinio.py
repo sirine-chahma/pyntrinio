@@ -22,6 +22,7 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     the ticker symbol you would like to get information for
   statement : str
     the statement that you want to study
+    options: 'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
   year : list
     the list containing the years as strings
   period : list
@@ -31,45 +32,44 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
 
   Returns
   -----------
-  dictionary or pandas.core.frame.DataFrame
-    a dictionary/dataframe that contains the financial information for a given company for the mentioned year(s) & period(s)
+  object of type output_format
+    information about the given statement for the given ticker at the given times in the specified output format
 
   Example
   -----------
-  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'])
-  >>> gather_financial_statement_time_series(api_key, 'CVX', 'cash_flow_statement', ['2016','2017'], ['Q1','Q2','Q3'], output_format = 'dict')
+  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
+  """
   
-  """   
   # https://data.intrinio.com/data-tags
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
   inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
     
-  ## Check if api_key, ticker and statement are strings
-    
+  # Check if api_key, ticker and statement are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")    
+      raise Exception("Invalid data format: " + inst + " must be a string")
     
-  ## Check if the output_format is either 'dict' or 'pddf' 
+  # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
-    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
-        
+    raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
+  
+  # Check that the value of statement is valid     
   if not statement in available_statements:
-      raise Exception("Valid entries for statement can either be 'income_statement' or 'cash_flow_statement' or 'balance_sheet_statement'.")    
+      raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
     
-  ## Check the type of year and period as list  
+  # Check that year is a list
   if not type(year) is list:
-      raise TypeError("year has to be a list of strings. For ex. ['2016','2017'].")
+      raise TypeError("Invalid data format: year must be a list of strings")
     
+  # Check that period is a list  
   if not type(period) is list:
-      raise TypeError("period has to be a list of strings/ For ex. ['Q1'].")     
-
+      raise TypeError("Invalid data format: period must be a list of strings")
+  
+  # Check that the length of year is 4
   for y in year:
     if not len(y)== 4:
-      raise Exception("Sorry, year must be a string of 4 digits")
-
-  ## Tests Over ##  
+      raise Exception("Invalid data format: year must be a string of 4 digits")
 
   # Initialize API key
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -79,12 +79,20 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   results = []
   ## Outer loop over years, inner loop over quarters
   for i in year:
+
     for j in period:
       # define key to obtain relevant information
       key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
       # Obtain req. object from API
-      fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+      try:
+        # put stock prices into a variable
+        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+      except:
+        print("Invalid API Key: please input a valid API key as a string")
+        return
+        
       my_fund = fundamentals.reported_financials          
+
                
       # Empty dictionary to append the results : convert to df at the last stage
       my_dict ={}
@@ -107,7 +115,6 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   final_df = pd.DataFrame(results)
 
   ## if_else for output format
-    
   if output_format == 'pddf':
     return final_df
   else:
@@ -127,6 +134,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
     a list of the ticker symbols you would like to study
   statement : str
     the statement that you want to study
+    options: 'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
   year : str
     the year you want the information from
   period : str
@@ -143,63 +151,70 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
   """    
+
+  statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
+
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
-  #Check if api_key, statement, year, period are strings
+  # Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
     if not isinstance(inputs[inst], str):
-      raise Exception("Sorry, " + inst + " must be a string")
+      raise TypeError("Invalid data format: " + inst + " must be a string")
           
-  #Check if ticker is a list
+  # Check if ticker is a list
   if not isinstance(ticker, list):
-    raise Exception("Sorry, ticker must be a list")
+    raise TypeError("Invalid data format: ticker must be a list of strings")
   
-  #Check if the ticker is valid
-  
-  #Check if the statement if valid
-  
-  #Check if the year is a 4-digits number
+  # Check if the year is a 4-digits number
   if not len(year)==4:
-    raise Exception("Sorry, year must be a string with 4 digits")
+    raise Exception("Invalid data format: year must be a string of 4 digits")
   
 
-  #Check if the output_format is either 'dict' or 'pddf' 
+  # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
-    raise Exception("Sorry, output_format must be 'dict' or 'pddf'.")
+    raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
+
+  # Check if the statement is valid
+  if not statement in statements:
+    raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
   
   
-  #link with the API
+  # link with the API
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
   fundamentals_api = intrinio_sdk.FundamentalsApi()
   
-  #result will contain a dictionnary for each company.
-  #This dictionnary will contain all the information for one company
+  # result will contain a dictionnary for each company.
+  # This dictionnary will contain all the information for one company
   result = []
 
-  #for every company
+  # for every company
   for comp in ticker : 
-    #key is the appropriate key to select the information we want
+    # key is the appropriate key to select the information we want
     key = comp + '-' + str(statement) + '-' + str(year) + '-' + str(period)
-    #get the object that we want from the API
-    fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+    try:
+      # get the object that we want from the API
+      fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+    except:
+      print("Invalid API Key: please input a valid API key as a string")
+      return
     my_fund = fundamentals.reported_financials
 
-    #This dictionnary will contain all the information for one company
+    # This dictionary will contain all the information for one company
     dict ={}
     dict['ticker'] = comp
     dict['statement'] = statement
     dict['year'] = year
     dict['period'] = period
       
-    #we store all the values, balances, names and the tags
+    # we store all the values, balances, names and the tags
     for i in range(len(my_fund)):
       value = my_fund[i].value
       tag_dic = my_fund[i].xbrl_tag
       balance = tag_dic.balance
       name = tag_dic.name
       tag = tag_dic.tag
-      #tag is a key of this dictionnary
+      # tag is a key of this dictionnary
           
-      #if the tag is several times in the original object, we keep one tag and the 
+      # if the tag is several times in the original object, we keep one tag and the 
       # value is the sum or the substraction of all the values of this tag 
       # (depending on the value of balance) 
       if tag in dict.keys():
@@ -208,68 +223,66 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
         else : 
            value = dict[tag]['value'] + value
       dict[tag] = {'value' : value, 'balance': balance, 'name': name}
-          
-      result.append(dict)
+    result.append(dict)
       
   if output_format == 'dict':
     return result
   
-  #if the wanted type of the output is a dataframe
+  # if the wanted type of the output is a dataframe
   else:
-    #initialize a new empty dictionnary that we will convert into a dataframe
-    #this dictionnary will have the following structure
+    # initialize a new empty dictionnary that we will convert into a dataframe
+    # this dictionnary will have the following structure
     # {'name': [name1, name2], 'revenue' : [revenu_company_1, revenue_company_2], ...}
     df = {}
     
-    #for every company
+    # for every company
     for i in range(len(result)):
           
-      #select all the information about this company
+      #s elect all the information about this company
       sub_dict = result[i]
             
-      #For all the tags that we have for this company
+      # For all the tags that we have for this company
       for val in sub_dict.keys():
                 
-        #if the key is already in the df dictionnary
+        # if the key is already in the df dictionnary
         if val in df.keys():
                   
-          #if the value that corresponds to the key is a string 
+          # if the value that corresponds to the key is a string 
           # which means that the key is 'ticker', 'statement', 'year' or 'period'
           if type(sub_dict[val]) == str:
                         
-            #We appen the value of the key
+            # We appen the value of the key
             df[val].append(sub_dict[val])
                         
-          #if the value of the key is a dictionnary
+          # if the value of the key is a dictionnary
           else:
                         
-            #only take the value that corresponds to the key 'value'
+            # only take the value that corresponds to the key 'value'
             df[val].append(sub_dict[val]['value'])
                 
-        #This step is to make sure that all the values in this dictionnary
+        # This step is to make sure that all the values in this dictionnary
         # (which are lists) are the same length
-        #if the tag of the company is not already in the df dictionnary
+        # if the tag of the company is not already in the df dictionnary
         else:
 
           if type(sub_dict[val]) == str:
-            #We have to put as many 'None' as the number of companies for 
+            # We have to put as many 'None' as the number of companies for 
             # which we already collected the information 
             df[val] = [None for j in range(i)] + [sub_dict[val]]
           else:
             df[val] = [None for j in range(i)] + [sub_dict[val]['value']]
       # We add some 'None' to make sure that all the values are the same 
-      #length in this dictionnary
+      # length in this dictionnary
       for val in df.keys():
-        #The length of each value should be i+1 (=number of companies we studied)
+        # The length of each value should be i+1 (=number of companies we studied)
         if len(df[val]) != i+1:
           df[val].append(None)
                   
   return pd.DataFrame(df)
                     
 
-
 # Function that gathers time series data of stock values
-def gather_stock_time_series(api_key, ticker, start_date, end_date, output_format='dict'):
+def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict'):
   """
   Given the ticker, start date, and end date, return from the Intrinio API stock data
     for that time frame in either a dictionary or a pandas dataframe format.
@@ -295,15 +308,64 @@ def gather_stock_time_series(api_key, ticker, start_date, end_date, output_forma
   Example
   -----------
   >>> gather_stock_time_series(api_key, 'AAPL')
-  {'ticker':['AAPL'], 'adj_close':[300], 'date':[datetime.date(2020, 1, 2)]}
   """
+    # ensure the type of the ticker is a string
+    if type(ticker) != str:
+        print("Invalid data format: ticker must be a string")
+        return
+    
+    try:
+        # change dates to datetime objects
+        if start_date is not None:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        if end_date is not None:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    except:
+        print("Invalid Date format: date must be a string in the format %Y-%m-%d")
+        return
+    
+    if start_date is not None and end_date is not None and start_date >= end_date:
+        print("Invalid Input: end_date must be later than start_date")
+        return
   
-  if output_format=='dict':
-    results={}
-  else:
-    results=pd.DataFrame(results)
-  
-  return results
+    # initialize API key
+    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+        
+    # initialize security API
+    security_api = intrinio_sdk.SecurityApi()
+    
+    try:
+        # put stock prices into a variable
+        stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
+    except:
+        print("Invalid API Key: please input a valid API key as a string")
+        return
+    
+    # initialize a results dictionary
+    results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
+            'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
+
+    # fill in dictionary
+    for i in list(range(0, len(stock_prices), 1)):
+        results['date'].append(stock_prices[i].date)
+        results['close'].append(stock_prices[i].close)
+        results['adj_close'].append(stock_prices[i].adj_close)
+        results['high'].append(stock_prices[i].high)
+        results['adj_high'].append(stock_prices[i].adj_high)
+        results['low'].append(stock_prices[i].low)
+        results['adj_low'].append(stock_prices[i].adj_low)
+        results['open'].append(stock_prices[i].open)
+        results['adj_open'].append(stock_prices[i].adj_open)
+        results['volume'].append(stock_prices[i].volume)
+        results['adj_volume'].append(stock_prices[i].adj_volume)
+        results['frequency'].append(stock_prices[i].frequency)
+        results['intraperiod'].append(stock_prices[i].intraperiod)
+    
+    # if the ouput format is a dataframe, change to that
+    if output_format == 'pddf':
+        results = pd.DataFrame(results)
+    
+    return results
 
 
 # Function that calculates the stock returns
@@ -330,7 +392,6 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   Example
   -----------
   >>> gather_stock_returns(api_key, ['AAPL', 'CSCO'], "2017-12-31", "2019-03-01")
-  
   """
   
   # test whether the input dates are in the right format
@@ -338,10 +399,10 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     buy_date = datetime.strptime(buy_date, '%Y-%m-%d').date()
     sell_date = datetime.strptime(sell_date, '%Y-%m-%d').date()
     if buy_date >= sell_date:
-      print("Invalid Input: `sell_date` is earlier than `buy_date`.")
+      print("Invalid Input: sell_date must be later than buy_date")
       return
   except:
-    print("Invalid Date format - please input the date as a string with format %Y-%m-%d")
+    print("Invalid Date format: date must be a string in the format %Y-%m-%d")
     return
   
   if type(ticker) == str: # if user gives just one ticker
@@ -357,7 +418,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
   try:
     security_api.get_security_stock_prices(ticker[0], start_date=buy_date, end_date=sell_date)
   except:
-    print("Incorrect API Key - please input a valid API key as a string")
+    print("Invalid API Key: please input a valid API key as a string")
     return
 
   # create the result DataFrame to record and report
