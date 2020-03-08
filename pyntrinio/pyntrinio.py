@@ -10,7 +10,6 @@ from intrinio_sdk.rest import ApiException
 from pytest import raises
 
 # Function that gathers a given financial statement for a given company for a specified time
-# Function that gathers a given financial statement for a given company for a specified time
 def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format = 'pddf'):
   """
   Given the tickers, statement, year and period returns the complete financial information from the Intrinio API stock data
@@ -80,39 +79,39 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   results = []
   ## Outer loop over years, inner loop over quarters
   for i in year:
-      for j in period:
-        # define key to obtain relevant information
-        key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
-        # Obtain req. object from API
-        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
-        my_fund = fundamentals.reported_financials          
+    for j in period:
+      # define key to obtain relevant information
+      key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+      # Obtain req. object from API
+      fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+      my_fund = fundamentals.reported_financials          
                
-        # Empty dictionary to append the results : convert to df at the last stage
-        my_dict ={}
-        my_dict['ticker'] = ticker
-        my_dict['statement'] = statement
-        my_dict['year'] = i
-        my_dict['period'] = j
+      # Empty dictionary to append the results : convert to df at the last stage
+      my_dict ={}
+      my_dict['ticker'] = ticker
+      my_dict['statement'] = statement
+      my_dict['year'] = i
+      my_dict['period'] = j
     
-        for n in range(0, len(my_fund)):
-          my_dict[str(my_fund[n].xbrl_tag.tag)] = []
+      for n in range(0, len(my_fund)):
+        my_dict[str(my_fund[n].xbrl_tag.tag)] = []
     
         # add values to the dictionary
-        for k in range(0, len(my_fund)):
-            for key, val in my_dict.items():
-                if my_fund[k].xbrl_tag.tag == key:
-                  my_dict[key].append(my_fund[k].value)
-                  my_dict[key] = [sum(my_dict[key])]
-        results.append(my_dict)
-
+      for k in range(0, len(my_fund)):
+        for key, val in my_dict.items():
+          if my_fund[k].xbrl_tag.tag == key:
+            my_dict[key].append(my_fund[k].value)
+            my_dict[key] = [sum(my_dict[key])]
+      results.append(my_dict)
+  
   final_df = pd.DataFrame(results)
 
   ## if_else for output format
     
   if output_format == 'pddf':
-      return final_df
+    return final_df
   else:
-      return results
+    return results
 
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
