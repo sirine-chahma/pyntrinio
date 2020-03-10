@@ -54,7 +54,7 @@ def test_start_date_prior_to_end_date():
     Test that you get an error when the end date is before the start date
     """
     msg = "Invalid Input: end_date must be later than start_date"
-    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15") == None
+    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15") == msg
 
 # test that you get a valid output shape when you put in no start date
 def test_end_date_only_shape():
