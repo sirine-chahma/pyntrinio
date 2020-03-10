@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime, date
 
 # helper data
-api_key = 'OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1'
+api_key = "OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1"
 ticker = 'AAPL'
 
 # test that return type is dictionary by default
@@ -14,14 +14,14 @@ def test_default_output_type():
     """
     Test that return type is dictionary by default
     """
-    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25")) == 'dict'
+    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25")) == dict
 
 # test that return type is a pandas dataframe when specified
 def test_pddf_output_type():
     """
     Test that return type is a pandas dataframe when specified
     """
-    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25", output_format='pddf')) == 'pandas.core.frame.DataFrame'
+    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25", output_format='pddf')) == pd.core.frame.DataFrame
 
 # test that you get an error when you put in an incorrect API key
 def api_key_test():
@@ -54,7 +54,7 @@ def test_start_date_prior_to_end_date():
     Test that you get an error when the end date is before the start date
     """
     msg = "Invalid Input: end_date must be later than start_date"
-    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15") == msg
+    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15") == None
 
 # test that you get a valid output shape when you put in no start date
 def test_end_date_only_shape():
