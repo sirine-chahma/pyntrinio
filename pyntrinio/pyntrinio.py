@@ -323,8 +323,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
     return
     
   if start_date is not None and end_date is not None and start_date >= end_date:
-    print("Invalid Input: end_date must be later than start_date")
-    return
+    return "Invalid Input: end_date must be later than start_date"
   
   # initialize API key
   intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
