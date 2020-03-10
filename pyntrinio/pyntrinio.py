@@ -39,7 +39,6 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   -----------
   >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
   """
-  
   # https://data.intrinio.com/data-tags
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
@@ -56,15 +55,15 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   
   # Check that the value of statement is valid     
   if not statement in available_statements:
-      raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
+    raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
     
   # Check that year is a list
   if not type(year) is list:
-      raise TypeError("Invalid data format: year must be a list of strings")
+    raise TypeError("Invalid data format: year must be a list of strings")
     
   # Check that period is a list  
   if not type(period) is list:
-      raise TypeError("Invalid data format: period must be a list of strings")
+    raise TypeError("Invalid data format: period must be a list of strings")
   
   # Check that the length of year is 4
   for y in year:
@@ -79,16 +78,16 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   results = []
   ## Outer loop over years, inner loop over quarters
   for i in year:
-      for j in period:
-        # define key to obtain relevant information
-        key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
-        # Obtain req. object from API
-        try:
-          # put stock prices into a variable
-          fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
-        except:
-          print("Invalid API Key: please input a valid API key as a string")
-          return
+    for j in period:
+      # define key to obtain relevant information
+      key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+      # Obtain req. object from API
+      try:
+        # put stock prices into a variable
+        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+      except:
+        print("Invalid API Key: please input a valid API key as a string")
+        return
         
         my_fund = fundamentals.reported_financials          
                
@@ -104,19 +103,19 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     
         # add values to the dictionary
         for k in range(0, len(my_fund)):
-            for key, val in my_dict.items():
-                if my_fund[k].xbrl_tag.tag == key:
-                  my_dict[key].append(my_fund[k].value)
-                  my_dict[key] = [sum(my_dict[key])]
+          for key, val in my_dict.items():
+              if my_fund[k].xbrl_tag.tag == key:
+                my_dict[key].append(my_fund[k].value)
+                my_dict[key] = [sum(my_dict[key])]
         results.append(my_dict)
 
   final_df = pd.DataFrame(results)
 
   ## if_else for output format
   if output_format == 'pddf':
-      return final_df
+    return final_df
   else:
-      return results
+    return results
 
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
@@ -148,8 +147,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   Example
   -----------
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'], 'income_statement', '2019', 'Q1')
-  """    
-
+  """
   statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
 
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
@@ -280,7 +278,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
                     
 
 # Function that gathers time series data of stock values
-def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict'):
+def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict', allow_max_rows=False):
   """
   Given the ticker, start date, and end date, return from the Intrinio API stock data
     for that time frame in either a dictionary or a pandas dataframe format.
@@ -297,6 +295,8 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
     the most recent date in the format of "%Y-%m-%d", e.g. "2019-12-31" to get data for
   output_format : str (optional, default = 'dict')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
+  allow_max_rows : bool (optional, default = False)
+    if False, then only 100 rows will show in the output, otherwise up to 10000 rows will show (based on dates)
     
   Returns
   -----------
@@ -305,65 +305,69 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   
   Example
   -----------
-  >>> gather_stock_time_series(api_key, 'AAPL')
+  >>> gather_stock_time_series(api_key, 'AAPL', start_date="2020-01-15", end_date="2020-01-30", output_format="pddf")
   """
-    # ensure the type of the ticker is a string
-    if type(ticker) != str:
-        print("Invalid data format: ticker must be a string")
-        return
+  # ensure the type of the ticker is a string
+  if type(ticker) != str:
+    print("Invalid data format: ticker must be a string")
+    return
     
-    try:
-        # change dates to datetime objects
-        if start_date is not None:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-        if end_date is not None:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-    except:
-        print("Invalid Date format: date must be a string in the format %Y-%m-%d")
-        return
+  try:
+    # change dates to datetime objects
+    if start_date is not None:
+      start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if end_date is not None:
+      end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+  except:
+    print("Invalid Date format: date must be a string in the format %Y-%m-%d")
+    return
     
-    if start_date is not None and end_date is not None and start_date >= end_date:
-        print("Invalid Input: end_date must be later than start_date")
-        return
+  if start_date is not None and end_date is not None and start_date >= end_date:
+    print("Invalid Input: end_date must be later than start_date")
+    return
   
-    # initialize API key
-    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+  # initialize API key
+  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
         
-    # initialize security API
-    security_api = intrinio_sdk.SecurityApi()
+  # initialize security API
+  security_api = intrinio_sdk.SecurityApi()
     
-    try:
-        # put stock prices into a variable
-        stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
-    except:
-        print("Invalid API Key: please input a valid API key as a string")
-        return
+  if allow_max_rows == False:
+    rows = 100
+  else: rows = 10000
     
-    # initialize a results dictionary
-    results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
+  try:
+    # put stock prices into a variable
+    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=rows).stock_prices
+  except:
+    print("Invalid API Key: please input a valid API key as a string")
+    return
+    
+  # initialize a results dictionary
+  results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
             'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
 
-    # fill in dictionary
-    for i in list(range(0, len(stock_prices), 1)):
-        results['date'].append(stock_prices[i].date)
-        results['close'].append(stock_prices[i].close)
-        results['adj_close'].append(stock_prices[i].adj_close)
-        results['high'].append(stock_prices[i].high)
-        results['adj_high'].append(stock_prices[i].adj_high)
-        results['low'].append(stock_prices[i].low)
-        results['adj_low'].append(stock_prices[i].adj_low)
-        results['open'].append(stock_prices[i].open)
-        results['adj_open'].append(stock_prices[i].adj_open)
-        results['volume'].append(stock_prices[i].volume)
-        results['adj_volume'].append(stock_prices[i].adj_volume)
-        results['frequency'].append(stock_prices[i].frequency)
-        results['intraperiod'].append(stock_prices[i].intraperiod)
+  # fill in dictionary
+  for i in list(range(0, len(stock_prices), 1)):
+      results['date'].append(stock_prices[i].date)
+      results['close'].append(stock_prices[i].close)
+      results['adj_close'].append(stock_prices[i].adj_close)
+      results['high'].append(stock_prices[i].high)
+      results['adj_high'].append(stock_prices[i].adj_high)
+      results['low'].append(stock_prices[i].low)
+      results['adj_low'].append(stock_prices[i].adj_low)
+      results['open'].append(stock_prices[i].open)
+      results['adj_open'].append(stock_prices[i].adj_open)
+      results['volume'].append(stock_prices[i].volume)
+      results['adj_volume'].append(stock_prices[i].adj_volume)
+      results['frequency'].append(stock_prices[i].frequency)
+      results['intraperiod'].append(stock_prices[i].intraperiod)
     
-    # if the ouput format is a dataframe, change to that
-    if output_format == 'pddf':
-        results = pd.DataFrame(results)
+  # if the ouput format is a dataframe, change to that
+  if output_format == 'pddf':
+    results = pd.DataFrame(results)
     
-    return results
+  return results
 
 
 # Function that calculates the stock returns

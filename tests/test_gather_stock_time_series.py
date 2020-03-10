@@ -3,7 +3,7 @@
 
 from pyntrinio.pyntrinio import gather_stock_time_series
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, date
 
 # helper data
 api_key = 'OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1'
@@ -28,7 +28,7 @@ def api_key_test():
     """
     Give a wrong api_key, see if the function correctly handles the exception.
     """
-    msg = "Incorrect API Key - please input a valid API key as a string"
+    msg = "Invalid API Key: please input a valid API key as a string"
     assert gather_stock_time_series('wrong api key!!', ticker, start_date="2020-01-15", end_date="2020-01-25") == msg
     
 # test that you get an error when you put in an incorrect ticker format
@@ -53,8 +53,8 @@ def test_start_date_prior_to_end_date():
     """
     Test that you get an error when the end date is before the start date
     """
-    msg = "Please choose a start date that is before the end date"
-    assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15")) == msg
+    msg = "Invalid Input: end_date must be later than start_date"
+    assert gather_stock_time_series(api_key, ticker, start_date="2020-01-25", end_date="2020-01-15") == msg
 
 # test that you get a valid output shape when you put in no start date
 def test_end_date_only_shape():
