@@ -12,58 +12,63 @@ from datetime import datetime, timedelta
 
 def gather_financial_statement_time_series(
 api_key, ticker, statement, year, period, output_format='pddf'):
-    """
-    Given the tickers, statement, year and period returns the complete
-    financial information from the Intrinio API stock data
+"""
+Given the tickers, statement, year and period returns the complete
+financial information from the Intrinio API stock data
 
 
-    Parameters
-    -----------
-    api_key : str
-      API key (sandbox or production) from Intrinio
-    ticker : str
-      the ticker symbol you would like to get information for
-    statement : str
-      the statement that you want to study
-      options: 'income_statement', 'cash_flow_statement',
-      'balance_sheet_statement'
-    year : list
-      the list containing the years as strings
-    period : list
-      the list of quarters (as strings) for which you want information
-    output_format : str (optional, default = 'pddf')
-      the output format for the data, options are 'dict' for dictionary
-      or 'pddf' for pandas dataframe
+Parameters
+-----------
+api_key : str
+  API key (sandbox or production) from Intrinio
+ticker : str
+  the ticker symbol you would like to get information for
+statement : str
+  the statement that you want to study
+  options: 'income_statement', 'cash_flow_statement',
+  'balance_sheet_statement'
+year : list
+  the list containing the years as strings
+period : list
+  the list of quarters (as strings) for which you want information
+output_format : str (optional, default = 'pddf')
+  the output format for the data, options are 'dict' for dictionary
+  or 'pddf' for pandas dataframe
 
-    Returns
-    -----------
-    object of type output_format
-      information about the given statement for the given ticker
-      at the given times in the specified output format
+Returns
+-----------
+object of type output_format
+  information about the given statement for the given ticker
+  at the given times in the specified output format
 
-    Example
-    -----------
-    >>> gather_financial_statement_time_series(api_key, 'AAPL',
-    'income_statement', ['2018,'2019'], ['Q1'])
-    """
+Example
+-----------
+>>> gather_financial_statement_time_series(api_key, 'AAPL',
+'income_statement', ['2018,'2019'], ['Q1'])
+"""
 
     # https://data.intrinio.com/data-tags
-    available_statements = ['income_statement', 'cash_flow_statement',
-    'balance_sheet_statement']
+    available_statements = [
+      'income_statement', 
+      'cash_flow_statement',
+      'balance_sheet_statement'
+      ]
 
     inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
 
     # Check if api_key, ticker and statement are strings
-    for inst in inputs.keys() :
-        if isinstance( inputs[inst], int):
+    for inst in inputs.keys():
+        if isinstance(inputs[inst], int) :
             raise TypeError(
-            "Invalid data format: " + inst + " must be a string")
+                           "Invalid data format: " + inst + 
+                           " must be a string")
         elif isinstance(inputs[inst], float):
             raise TypeError(
-            "Invalid data format: " + inst + " must be a string")
+                            "Invalid data format: " + inst + 
+                            " must be a string")
         elif not isinstance(inputs[inst], str):
-            raise NameError(
-            "Invalid data format: " + inst + " must be a string")
+            raise NameError("Invalid data format: " 
+                            + inst + " must be a string")
 
     # Check if the output_format is either 'dict' or 'pddf' 
     if not output_format in ['dict', 'pddf']:
@@ -71,8 +76,7 @@ api_key, ticker, statement, year, period, output_format='pddf'):
     
     # Check that the value of statement is valid     
     if not statement in available_statements:
-        raise Exception("Invalid data format: statement must be one of 'income_statement',
-        'cash_flow_statement' or 'balance_sheet_statement'")
+        raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
     
     # Check that year is a list
     if isinstance(year, int):
