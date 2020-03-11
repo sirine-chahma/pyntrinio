@@ -11,47 +11,47 @@ from datetime import datetime, timedelta
 
 
 def gather_financial_statement_time_series(
-api_key, ticker, statement, year, period, output_format='pddf'):
-"""
-Given the tickers, statement, year and period returns the complete
-financial information from the Intrinio API stock data
+    api_key, ticker, statement, year, period, output_format='pddf'):
 
 
-Parameters
------------
-api_key : str
-  API key (sandbox or production) from Intrinio
-ticker : str
-  the ticker symbol you would like to get information for
-statement : str
-  the statement that you want to study
-  options: 'income_statement', 'cash_flow_statement',
-  'balance_sheet_statement'
-year : list
-  the list containing the years as strings
-period : list
-  the list of quarters (as strings) for which you want information
-output_format : str (optional, default = 'pddf')
-  the output format for the data, options are 'dict' for dictionary
-  or 'pddf' for pandas dataframe
+    """
+    Given the tickers, statement, year and period returns the complete
+    financial information from the Intrinio API stock data
 
-Returns
------------
-object of type output_format
-  information about the given statement for the given ticker
-  at the given times in the specified output format
 
-Example
------------
->>> gather_financial_statement_time_series(api_key, 'AAPL',
-'income_statement', ['2018,'2019'], ['Q1'])
-"""
+    Parameters
+    -----------
+    api_key : str
+      API key (sandbox or production) from Intrinio
+    ticker : str
+      the ticker symbol you would like to get information for
+    statement : str
+      the statement that you want to study
+      options: 'income_statement', 'cash_flow_statement',
+      'balance_sheet_statement'
+    year : list
+      the list containing the years as strings
+    period : list
+      the list of quarters (as strings) for which you want information
+    output_format : str (optional, default = 'pddf')
+      the output format for the data, options are 'dict' for dictionary
+      or 'pddf' for pandas dataframe
+
+    Returns
+    -----------
+    object of type output_format
+      information about the given statement for the given ticker
+      at the given times in the specified output format
+
+    Example
+    -----------
+    >>> gather_financial_statement_time_series(api_key, 'AAPL',
+    'income_statement', ['2018,'2019'], ['Q1'])
+    """
 
     # https://data.intrinio.com/data-tags
     available_statements = [
-      'income_statement', 
-      'cash_flow_statement',
-      'balance_sheet_statement'
+        'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
       ]
 
     inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
@@ -60,14 +60,14 @@ Example
     for inst in inputs.keys():
         if isinstance(inputs[inst], int) :
             raise TypeError(
-                           "Invalid data format: " + inst + 
+                           "Invalid data format: " + inst +
                            " must be a string")
         elif isinstance(inputs[inst], float):
             raise TypeError(
-                            "Invalid data format: " + inst + 
+                            "Invalid data format: " + inst +
                             " must be a string")
         elif not isinstance(inputs[inst], str):
-            raise NameError("Invalid data format: " 
+            raise NameError("Invalid data format: "
                             + inst + " must be a string")
 
     # Check if the output_format is either 'dict' or 'pddf' 
