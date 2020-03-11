@@ -18,27 +18,56 @@ def test_type_input():
     statement = 'income_statement'
     year = '2014'
     period = 'Q1'
-    tickers = ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
     
     #Check that when the api_key is not a string, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(['la'], ticker, statement, year, period)
+    with raises(NameError):
+        gather_financial_statement_company_compare(la, ticker, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(123, ticker, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(123.3, ticker, statement, year, period)
     
     #Check that when the statement is not a string, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, ticker, 123, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, 123.3, year, period)
+    with raises(NameError):
+        gather_financial_statement_company_compare(api_key, ticker, stat, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, ['stat'], year, period)
     
     #Check that when the year is not a string, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, ticker, statement, 1954, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, 1954.4, period)
+    with raises(NameError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, years, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, ['123'], period)
     
     #Check that when the period is not a string, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, ticker, statement, year, 3)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, year, 3.3)
+    with raises(NameError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, year, periods)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, ticker, statement, year, ['3.3'])
     
     #Check that when the ticker is not a list, it returns an error
     with raises(TypeError):
         gather_financial_statement_company_compare(api_key, 'AAPL', statement, year, period)
+    with raises(NameError):
+        gather_financial_statement_company_compare(api_key, AAPL, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, 123, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_company_compare(api_key, 123.3, statement, year, period)
 
     #Check if the statement is valid
     with raises(Exception):

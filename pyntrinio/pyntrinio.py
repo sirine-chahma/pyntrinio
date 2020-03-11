@@ -44,11 +44,16 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
   inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
+
     
   # Check if api_key, ticker and statement are strings
   for inst in inputs.keys():
-    if not isinstance(inputs[inst], str):
-      raise Exception("Invalid data format: " + inst + " must be a string")
+    if isinstance(inputs[inst], int):
+      raise TypeError("Invalid data format: " + inst + " must be a string")
+    elif isinstance(inputs[inst], float):
+      raise TypeError("Invalid data format: " + inst + " must be a string")
+    elif not isinstance(inputs[inst], str):
+      raise NameError("Invalid data format: " + inst + " must be a string")
     
   # Check if the output_format is either 'dict' or 'pddf' 
   if not output_format in ['dict', 'pddf']:
@@ -60,11 +65,11 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     
   # Check that year is a list
   if not type(year) is list:
-      raise TypeError("Invalid data format: year must be a list of strings")
+      raise NameError("Invalid data format: year must be a list of strings")
     
   # Check that period is a list  
   if not type(period) is list:
-      raise TypeError("Invalid data format: period must be a list of strings")
+      raise NameError("Invalid data format: period must be a list of strings")
   
   # Check that the length of year is 4
   for y in year:
@@ -157,12 +162,29 @@ def gather_financial_statement_company_compare(api_key, ticker, statement, year,
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
   # Check if api_key, statement, year, period are strings
   for inst in inputs.keys():
-    if not isinstance(inputs[inst], str):
+    if isinstance(inputs[inst], int):
       raise TypeError("Invalid data format: " + inst + " must be a string")
-          
+    elif isinstance(inputs[inst], float):
+      raise TypeError("Invalid data format: " + inst + " must be a string")
+    elif isinstance(inputs[inst], list):
+      raise TypeError("Invalid data format: " + inst + " must be a string")
+    elif not isinstance(inputs[inst], str):
+      raise NameError("Invalid data format: " + inst + " must be a string")
+    
   # Check if ticker is a list
+  if isinstance(ticker, int):
+    raise TypeError("Invalid data format: ticker must be a string")
+  elif isinstance(ticker, float):
+    raise TypeError("Invalid data format: ticker must be a string")
+  elif isinstance(ticker, str):
+    raise TypeError("Invalid data format: ticker must be a string")
   if not isinstance(ticker, list):
-    raise TypeError("Invalid data format: ticker must be a list of strings")
+    raise NameError("Invalid data format: ticker must be a list")
+
+  # Check if the elements in the ticker list are strings
+  for comp in ticker:
+    if not isinstance(comp, str):
+      raise TypeError('Invalid data format: ticker must be a list of strings')
   
   # Check if the year is a 4-digits number
   if not len(year)==4:
@@ -309,63 +331,63 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   -----------
   >>> gather_stock_time_series(api_key, 'AAPL')
   """
-    # ensure the type of the ticker is a string
-    if type(ticker) != str:
-        print("Invalid data format: ticker must be a string")
-        return
+  # ensure the type of the ticker is a string
+  if type(ticker) != str:
+    print("Invalid data format: ticker must be a string")
+    return
     
-    try:
-        # change dates to datetime objects
-        if start_date is not None:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-        if end_date is not None:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-    except:
-        print("Invalid Date format: date must be a string in the format %Y-%m-%d")
-        return
+  try:
+    # change dates to datetime objects
+    if start_date is not None:
+      start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if end_date is not None:
+      end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+  except:
+    print("Invalid Date format: date must be a string in the format %Y-%m-%d")
+    return
     
-    if start_date is not None and end_date is not None and start_date >= end_date:
-        print("Invalid Input: end_date must be later than start_date")
-        return
-  
-    # initialize API key
-    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
-        
-    # initialize security API
-    security_api = intrinio_sdk.SecurityApi()
-    
-    try:
-        # put stock prices into a variable
-        stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
-    except:
-        print("Invalid API Key: please input a valid API key as a string")
-        return
-    
-    # initialize a results dictionary
-    results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 
-            'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
+  if start_date is not None and end_date is not None and start_date >= end_date:
+    print("Invalid Input: end_date must be later than start_date")
+    return
 
-    # fill in dictionary
-    for i in list(range(0, len(stock_prices), 1)):
-        results['date'].append(stock_prices[i].date)
-        results['close'].append(stock_prices[i].close)
-        results['adj_close'].append(stock_prices[i].adj_close)
-        results['high'].append(stock_prices[i].high)
-        results['adj_high'].append(stock_prices[i].adj_high)
-        results['low'].append(stock_prices[i].low)
-        results['adj_low'].append(stock_prices[i].adj_low)
-        results['open'].append(stock_prices[i].open)
-        results['adj_open'].append(stock_prices[i].adj_open)
-        results['volume'].append(stock_prices[i].volume)
-        results['adj_volume'].append(stock_prices[i].adj_volume)
-        results['frequency'].append(stock_prices[i].frequency)
-        results['intraperiod'].append(stock_prices[i].intraperiod)
+  # initialize API key
+  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+      
+  # initialize security API
+  security_api = intrinio_sdk.SecurityApi()
+  
+  try:
+    # put stock prices into a variable
+    stock_prices = security_api.get_security_stock_prices(ticker, start_date=start_date, end_date=end_date, page_size=10000).stock_prices
+  except:
+    print("Invalid API Key: please input a valid API key as a string")
+    return
+
     
-    # if the ouput format is a dataframe, change to that
-    if output_format == 'pddf':
-        results = pd.DataFrame(results)
-    
-    return results
+  
+  # initialize a results dictionary
+  results = {'date':[], 'close':[], 'adj_close':[], 'high':[], 'adj_high':[], 'low':[], 'adj_low':[], 'open':[], 'adj_open':[], 'volume':[], 'adj_volume':[], 'frequency':[], 'intraperiod':[]}
+
+  # fill in dictionary
+  for i in list(range(0, len(stock_prices), 1)):
+    results['date'].append(stock_prices[i].date)
+    results['close'].append(stock_prices[i].close)
+    results['adj_close'].append(stock_prices[i].adj_close)
+    results['high'].append(stock_prices[i].high)
+    results['adj_high'].append(stock_prices[i].adj_high)
+    results['low'].append(stock_prices[i].low)
+    results['adj_low'].append(stock_prices[i].adj_low)
+    results['open'].append(stock_prices[i].open)
+    results['adj_open'].append(stock_prices[i].adj_open)
+    results['volume'].append(stock_prices[i].volume)
+    results['adj_volume'].append(stock_prices[i].adj_volume)
+    results['frequency'].append(stock_prices[i].frequency)
+    results['intraperiod'].append(stock_prices[i].intraperiod)
+  
+  # if the ouput format is a dataframe, change to that
+  if output_format == 'pddf':
+    results = pd.DataFrame([results])
+  return results
 
 
 # Function that calculates the stock returns
