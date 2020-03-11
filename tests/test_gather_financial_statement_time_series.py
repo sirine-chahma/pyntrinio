@@ -18,18 +18,24 @@ def test_api_key_format():
     """
     Test if the api_key is a string
     """
-    with raises(Exception):
+    with raises(NameError):
         gather_financial_statement_time_series(OjQ0Yz, ticker, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_time_series(123, ticker, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_time_series(123.3, ticker, statement, year, period)
+
 
 def test_ticker_format():
     """
-    Test if the ticker is a string and available in a list of valid tickers
+    Test if the ticker is a string
     """
-    with raises(Exception):
+    with raises(NameError):
         gather_financial_statement_time_series(api_key, CVX, statement, year, period)
-
-    with raises(Exception):
-        gather_financial_statement_time_series(api_key, 'CVSD', statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, 123, statement, year, period)
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, 123.3, statement, year, period)
 
 def test_output_format():
     """
@@ -48,8 +54,17 @@ def test_year_format():
     with raises(Exception):
         gather_financial_statement_time_series(api_key, ticker, statement, ['201', '2018'], period, output_format = 'pddf')
 
-    with raises(Exception):
-        gather_financial_statement_time_series(api_key, ticker, statement, '2017', period)    
+    with raises(NameError):
+        gather_financial_statement_time_series(api_key, ticker, statement, '2017', period)
+    
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, ticker, statement, 2017, period)
+    
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, ticker, statement, 2017.0, period)    
+
+    with raises(NameError):
+        gather_financial_statement_time_series(api_key, ticker, statement, years, period)
 
     with raises(Exception):
         gather_financial_statement_time_series(api_key, ticker, statement, ['2017' '2018'], period) 
@@ -58,7 +73,7 @@ def test_statement_format():
     """
     Test if the statement is a string and available in a list of valid statement options
     """
-    with raises(Exception):
+    with raises(NameError):
         gather_financial_statement_time_series(api_key, ticker, income_statement, year, period, output_format = 'pddf')
 
     with raises(Exception):
@@ -74,6 +89,6 @@ def test_period_format():
     with raises(Exception):
         gather_financial_statement_time_series(api_key, ticker, 'income_statement', year, 'Q1')
 
-    with raises(Exception):
+    with raises(NameError):
         gather_financial_statement_time_series(api_key, ticker, 'income_statement', year, Q1)
 
