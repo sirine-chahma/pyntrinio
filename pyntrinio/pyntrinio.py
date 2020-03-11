@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 
 def gather_financial_statement_time_series(
-  api_key, ticker, statement, year, period, output_format='pddf'):
+        api_key, ticker, statement, year, period, output_format='pddf'):
     """
     Given the tickers, statement, year and period returns the complete
     financial information from the Intrinio API stock data
@@ -50,7 +50,7 @@ def gather_financial_statement_time_series(
     # https://data.intrinio.com/data-tags
     available_statements = [
         'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
-      ]
+    ]
 
     inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
 
@@ -58,12 +58,12 @@ def gather_financial_statement_time_series(
     for inst in inputs.keys():
         if isinstance(inputs[inst], int):
             raise TypeError(
-                           "Invalid data format: " + inst +
-                           " must be a string")
+                "Invalid data format: " + inst +
+                " must be a string")
         elif isinstance(inputs[inst], float):
             raise TypeError(
-                           "Invalid data format: " + inst +
-                           " must be a string")
+                "Invalid data format: " + inst +
+                " must be a string")
         elif not isinstance(inputs[inst], str):
             raise NameError("Invalid data format: " + inst +
                             " must be a string")
@@ -71,15 +71,15 @@ def gather_financial_statement_time_series(
     # Check if the output_format is either 'dict' or 'pddf'
     if output_format not in ['dict', 'pddf']:
         raise Exception(
-                       "Invalid data format: output_format" +
-                       "must be 'dict' or 'pddf'")
+            "Invalid data format: output_format" +
+            "must be 'dict' or 'pddf'")
 
     # Check that the value of statement is valid
     if statement not in available_statements:
         raise Exception(
-                       "Invalid data format: statement must be one of" +
-                       "'income_statement', 'cash_flow_statement' or " +
-                       "'balance_sheet_statement'")
+            "Invalid data format: statement must be one of" +
+            "'income_statement', 'cash_flow_statement' or " +
+            "'balance_sheet_statement'")
 
     # Check that year is a list
     if isinstance(year, int):
@@ -92,15 +92,15 @@ def gather_financial_statement_time_series(
     # Check that period is a list
     if not type(period) is list:
         raise NameError(
-                       "Invalid data format: " +
-                       "period must be a list of strings")
+            "Invalid data format: " +
+            "period must be a list of strings")
 
     # Check that the length of year is 4
     for y in year:
         if not len(y) == 4:
             raise Exception(
-                          "Invalid data format: " +
-                          "year must be a string of 4 digits")
+                "Invalid data format: " +
+                "year must be a string of 4 digits")
 
     # Initialize API key
     intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -112,15 +112,17 @@ def gather_financial_statement_time_series(
     for i in year:
         for j in period:
             # define key to obtain relevant information
-            key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+            key = str(ticker) + '-' + str(statement) + \
+                '-' + str(i) + '-' + str(j)
             # Obtain req. object from API
             try:
                 # put stock prices into a variable
-                fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+                fundamentals = fundamentals_api.get_fundamental_reported_financials(
+                    key)
             except:
                 print(
                     "Invalid API Key: please input a valid API key as a string"
-                    )
+                )
                 return
 
             my_fund = fundamentals.reported_financials
@@ -154,6 +156,8 @@ def gather_financial_statement_time_series(
 
 # Function that gathers a given statement at a specific time for different
 # companies
+
+
 def gather_financial_statement_company_compare(api_key, ticker, statement,
                                                year, period,
                                                output_format='dict'):
@@ -225,23 +229,25 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
     # Check if the elements in the ticker list are strings
     for comp in ticker:
         if not isinstance(comp, str):
-            raise TypeError('Invalid data format: ticker must be a list of strings')
+            raise TypeError(
+                'Invalid data format: ticker must be a list of strings')
 
     # Check if the year is a 4-digits number
     if not len(year) == 4:
-        raise Exception("Invalid data format: year must be a string of 4 digits")
+        raise Exception(
+            "Invalid data format: year must be a string of 4 digits")
 
     # Check if the output_format is either 'dict' or 'pddf'
     if output_format not in ['dict', 'pddf']:
         raise Exception(
-          "Invalid data format: output_format must be 'dict' or 'pddf'"
-          )
+            "Invalid data format: output_format must be 'dict' or 'pddf'"
+        )
 
     # Check if the statement is valid
     if statement not in statements:
         raise Exception(
             "Invalid data format: statement must be a valid type"
-            )
+        )
 
     # link with the API
     intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -257,7 +263,8 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
         key = comp + '-' + str(statement) + '-' + str(year) + '-' + str(period)
         try:
             # get the object that we want from the API
-            fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+            fundamentals = fundamentals_api.get_fundamental_reported_financials(
+                key)
         except:
             print("Invalid API Key: please input a valid API key as a string")
             return
@@ -340,7 +347,8 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
                         # information
                         df[val] = [None for j in range(i)] + [sub_dict[val]]
                     else:
-                        df[val] = [None for j in range(i)] + [sub_dict[val]['value']]
+                        df[val] = [None for j in range(
+                            i)] + [sub_dict[val]['value']]
                         # We add some 'None' to make sure that all the values
                         # are the same length in this dictionary
                         for val in df.keys():
@@ -354,8 +362,8 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
 
 # Function that gathers time series data of stock values
 def gather_stock_time_series(
-    api_key, ticker, start_date=None, end_date=None, output_format='dict',
-    allow_max_rows=False):
+        api_key, ticker, start_date=None, end_date=None, output_format='dict',
+        allow_max_rows=False):
     """
     Given the ticker, start date, and end date, return from the Intrinio API
         stock data for that time frame in either a dictionary or a pandas
@@ -499,7 +507,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     except:
         print(
             "Invalid Date format: date must be a string in the format %Y-%m-%d"
-            )
+        )
         return
 
     if type(ticker) == str:  # if user gives just one ticker
@@ -535,16 +543,15 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
 
     for ticker in ticker:
         api_response = security_api.get_security_stock_prices(
-                                                          ticker,
-                                                          start_date=buy_date,
-                                                          end_date=buy_date_upper
-                                                          )
+            ticker,
+            start_date=buy_date,
+            end_date=buy_date_upper
+        )
         buy_price = api_response.stock_prices[-1].adj_close
         buy_date = api_response.stock_prices[-1].date.strftime("%Y-%m-%d")
 
-        api_response = security_api.get_security_stock_prices(ticker,
-                                               start_date=sell_date_lower,
-                                               end_date=sell_date)
+        api_response = security_api.get_security_stock_prices(
+            ticker, start_date=sell_date_lower, end_date=sell_date)
         sell_price = api_response.stock_prices[0].adj_close
         sell_date = api_response.stock_prices[0].date.strftime("%Y-%m-%d")
         rtn = ((sell_price - buy_price) / buy_price)*100
