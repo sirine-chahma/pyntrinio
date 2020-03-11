@@ -392,8 +392,7 @@ def gather_stock_time_series(
     """
     # ensure the type of the ticker is a string
     if type(ticker) != str:
-        print("Invalid data format: ticker must be a string")
-        return
+        return "Invalid data format: ticker must be a string"
 
     try:
         # change dates to datetime objects
@@ -402,10 +401,7 @@ def gather_stock_time_series(
         if end_date is not None:
             end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
     except:
-        print(
-            "Invalid Date format: date must be a string in the format %Y-%m-%d"
-            )
-        return
+        return "Invalid Date format: date must be a string in the format %Y-%m-%d"
 
     if start_date is not None and end_date is not None and start_date >= end_date:
         return "Invalid Input: end_date must be later than start_date"
@@ -428,8 +424,7 @@ def gather_stock_time_series(
             ticker, start_date=start_date, end_date=end_date,
             page_size=rows).stock_prices
     except:
-        print("Invalid API Key: please input a valid API key as a string")
-        return
+        return "Invalid API Key: please input a valid API key as a string"
 
     # initialize a results dictionary
     results = {'date': [], 'close': [], 'adj_close': [], 'high': [],
