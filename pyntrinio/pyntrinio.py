@@ -3,16 +3,15 @@
 
 # Imports
 import pandas as pd
-import numpy as np
 import intrinio_sdk
 from datetime import datetime, timedelta
-from intrinio_sdk.rest import ApiException
-from pytest import raises
 
 # Function that gathers a given financial statement for a given company for a specified time
 def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format = 'pddf'):
   """
-  Given the tickers, statement, year and period returns the complete financial information from the Intrinio API stock data
+  Given the tickers, statement, year and period returns the complete financial information 
+  from the Intrinio API stock data
+  
   
   Parameters
   -----------
