@@ -353,8 +353,9 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
 
 
 # Function that gathers time series data of stock values
-def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None,
-                             output_format='dict', allow_max_rows=False):
+def gather_stock_time_series(
+    api_key, ticker, start_date=None, end_date=None, output_format='dict',
+    allow_max_rows=False):
     """
     Given the ticker, start date, and end date, return from the Intrinio API
         stock data for that time frame in either a dictionary or a pandas
@@ -407,8 +408,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None,
         return
 
     if start_date is not None and end_date is not None and start_date >= end_date:
-        print("Invalid Input: end_date must be later than start_date")
-        return
+        return "Invalid Input: end_date must be later than start_date"
 
     # initialize API key
     intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -416,14 +416,17 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None,
     # initialize security API
     security_api = intrinio_sdk.SecurityApi()
 
+    # if allow_max_rows=False
+    if allow_max_rows == False:
+        rows = 100
+    else:
+        rows = 10000
+
     try:
         # put stock prices into a variable
         stock_prices = security_api.get_security_stock_prices(
-                                                  ticker,
-                                                  start_date=start_date,
-                                                  end_date=end_date,
-                                                  page_size=10000
-                                                  ).stock_prices
+            ticker, start_date=start_date, end_date=end_date,
+            page_size=rows).stock_prices
     except:
         print("Invalid API Key: please input a valid API key as a string")
         return
@@ -537,12 +540,16 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
 
     for ticker in ticker:
         api_response = security_api.get_security_stock_prices(
-            ticker, start_date=buy_date, end_date=buy_date_upper)
+                                                          ticker,
+                                                          start_date=buy_date,
+                                                          end_date=buy_date_upper
+                                                          )
         buy_price = api_response.stock_prices[-1].adj_close
         buy_date = api_response.stock_prices[-1].date.strftime("%Y-%m-%d")
 
-        api_response = security_api.get_security_stock_prices(
-            ticker, start_date=sell_date_lower, end_date=sell_date)
+        api_response = security_api.get_security_stock_prices(ticker,
+                                               start_date=sell_date_lower,
+                                               end_date=sell_date)
         sell_price = api_response.stock_prices[0].adj_close
         sell_date = api_response.stock_prices[0].date.strftime("%Y-%m-%d")
         rtn = ((sell_price - buy_price) / buy_price)*100

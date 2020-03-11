@@ -4,6 +4,7 @@
 from pyntrinio.pyntrinio import gather_stock_time_series
 import pandas as pd
 from datetime import datetime, date
+import intrinio_sdk
 
 # helper data
 api_key = "OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1"
@@ -16,6 +17,7 @@ def test_default_output_type():
     """
     assert type(gather_stock_time_series(api_key, ticker, start_date="2020-01-15", end_date="2020-01-25")) == dict
 
+print(type(gather_stock_time_series(api_key, "AAPL", start_date="2020-01-15", end_date="2020-01-25")))
 # test that return type is a pandas dataframe when specified
 def test_pddf_output_type():
     """
