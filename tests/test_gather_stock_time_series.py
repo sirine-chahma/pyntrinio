@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime, date
 
 # helper data
-api_key = 'OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1'
+api_key = "OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1"
 ticker = 'AAPL'
 
 # test that return type is dictionary by default

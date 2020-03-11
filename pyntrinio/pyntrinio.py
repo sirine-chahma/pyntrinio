@@ -185,7 +185,6 @@ api_key, ticker, statement, year, period, output_format='dict'):
   >>> gather_financial_statement_company_compare(api_key, ['AAPL', 'CSCO'],
   'income_statement', '2019', 'Q1')
   """    
-
   statements = ['income_statement', 'balance_sheet_statement', 'cash_flow_statement']
 
   inputs = {'api_key':api_key, 'statement':statement, 'year':year, 'period':period}
@@ -334,7 +333,7 @@ api_key, ticker, statement, year, period, output_format='dict'):
                     
 
 # Function that gathers time series data of stock values
-def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict'):
+def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, output_format='dict', allow_max_rows=False):
   """
   Given the ticker, start date, and end date, return from the Intrinio API stock data
     for that time frame in either a dictionary or a pandas dataframe format.
@@ -351,6 +350,8 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
     the most recent date in the format of "%Y-%m-%d", e.g. "2019-12-31" to get data for
   output_format : str (optional, default = 'dict')
     the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
+  allow_max_rows : bool (optional, default = False)
+    if False, then only 100 rows will show in the output, otherwise up to 10000 rows will show (based on dates)
     
   Returns
   -----------
@@ -359,7 +360,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   
   Example
   -----------
-  >>> gather_stock_time_series(api_key, 'AAPL')
+  >>> gather_stock_time_series(api_key, 'AAPL', start_date="2020-01-15", end_date="2020-01-30", output_format="pddf")
   """
   # ensure the type of the ticker is a string
   if type(ticker) != str:
@@ -420,6 +421,7 @@ def gather_stock_time_series(api_key, ticker, start_date=None, end_date=None, ou
   # if the ouput format is a dataframe, change to that
   if output_format == 'pddf':
     results = pd.DataFrame([results])
+  
   return results
 
 
