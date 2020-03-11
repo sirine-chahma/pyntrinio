@@ -7,12 +7,13 @@ import intrinio_sdk
 from datetime import datetime, timedelta
 
 # Function that gathers a given financial statement for a given company for a specified time
-def gather_financial_statement_time_series(api_key, ticker, statement, year, period, output_format = 'pddf'):
+def gather_financial_statement_time_series(
+  api_key, ticker, statement, year, period, output_format='pddf'):
   """
-  Given the tickers, statement, year and period returns the complete financial information 
-  from the Intrinio API stock data
-  
-  
+  Given the tickers, statement, year and period returns the complete
+  financial information from the Intrinio API stock data
+
+
   Parameters
   -----------
   api_key : str
@@ -21,13 +22,15 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
     the ticker symbol you would like to get information for
   statement : str
     the statement that you want to study
-    options: 'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
+    options: 'income_statement', 'cash_flow_statement', 
+    'balance_sheet_statement'
   year : list
     the list containing the years as strings
   period : list
     the list of quarters (as strings) for which you want information
   output_format : str (optional, default = 'pddf')
-    the output format for the data, options are 'dict' for dictionary or 'pddf' for pandas dataframe
+    the output format for the data, options are 'dict' for dictionary 
+    or 'pddf' for pandas dataframe
 
   Returns
   -----------
@@ -42,9 +45,8 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
   # https://data.intrinio.com/data-tags
   available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
-  inputs = {'api_key':api_key, 'ticker': ticker, 'statement':statement}
+  inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
 
-    
   # Check if api_key, ticker and statement are strings
   for inst in inputs.keys():
     if isinstance(inputs[inst], int):
