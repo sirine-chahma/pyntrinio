@@ -6,129 +6,132 @@ import pandas as pd
 import intrinio_sdk
 from datetime import datetime, timedelta
 
-# Function that gathers a given financial statement for a given company for a specified time
+# Function that gathers a given financial statement 
+# for a given company for a specified time
+
 def gather_financial_statement_time_series(
-  api_key, ticker, statement, year, period, output_format='pddf'):
-  """
-  Given the tickers, statement, year and period returns the complete
-  financial information from the Intrinio API stock data
+    api_key, ticker, statement, year, period, output_format='pddf'):
+    """
+    Given the tickers, statement, year and period returns the complete
+    financial information from the Intrinio API stock data
 
 
-  Parameters
-  -----------
-  api_key : str
-    API key (sandbox or production) from Intrinio
-  ticker : str
-    the ticker symbol you would like to get information for
-  statement : str
-    the statement that you want to study
-    options: 'income_statement', 'cash_flow_statement', 
-    'balance_sheet_statement'
-  year : list
-    the list containing the years as strings
-  period : list
-    the list of quarters (as strings) for which you want information
-  output_format : str (optional, default = 'pddf')
-    the output format for the data, options are 'dict' for dictionary 
-    or 'pddf' for pandas dataframe
+    Parameters
+    -----------
+    api_key : str
+      API key (sandbox or production) from Intrinio
+    ticker : str
+      the ticker symbol you would like to get information for
+    statement : str
+      the statement that you want to study
+      options: 'income_statement', 'cash_flow_statement',
+      'balance_sheet_statement'
+    year : list
+      the list containing the years as strings
+    period : list
+      the list of quarters (as strings) for which you want information
+    output_format : str (optional, default = 'pddf')
+      the output format for the data, options are 'dict' for dictionary
+      or 'pddf' for pandas dataframe
 
-  Returns
-  -----------
-  object of type output_format
-    information about the given statement for the given ticker at the given times in the specified output format
+    Returns
+    -----------
+    object of type output_format
+      information about the given statement for the given ticker
+      at the given times in the specified output format
 
-  Example
-  -----------
-  >>> gather_financial_statement_time_series(api_key, 'AAPL', 'income_statement', ['2018,'2019'], ['Q1'])
-  """
-  
-  # https://data.intrinio.com/data-tags
-  available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
+    Example
+    -----------
+    >>> gather_financial_statement_time_series(api_key, 'AAPL',
+    'income_statement', ['2018,'2019'], ['Q1'])
+    """
 
-  inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
+    # https://data.intrinio.com/data-tags
+    available_statements = ['income_statement', 'cash_flow_statement', 'balance_sheet_statement']
 
-  # Check if api_key, ticker and statement are strings
-  for inst in inputs.keys():
-    if isinstance(inputs[inst], int):
-      raise TypeError("Invalid data format: " + inst + " must be a string")
-    elif isinstance(inputs[inst], float):
-      raise TypeError("Invalid data format: " + inst + " must be a string")
-    elif not isinstance(inputs[inst], str):
-      raise NameError("Invalid data format: " + inst + " must be a string")
+    inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
+
+    # Check if api_key, ticker and statement are strings
+    for inst in inputs.keys():
+        if isinstance( inputs[inst], int):
+            raise TypeError("Invalid data format: " + inst + " must be a string")
+        elif isinstance(inputs[inst], float):
+            raise TypeError("Invalid data format: " + inst + " must be a string")
+        elif not isinstance(inputs[inst], str):
+            raise NameError("Invalid data format: " + inst + " must be a string")
     
-  # Check if the output_format is either 'dict' or 'pddf' 
-  if not output_format in ['dict', 'pddf']:
-    raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
-  
+      # Check if the output_format is either 'dict' or 'pddf' 
+    if not output_format in ['dict', 'pddf']:
+        raise Exception("Invalid data format: output_format must be 'dict' or 'pddf'")
+    
   # Check that the value of statement is valid     
-  if not statement in available_statements:
-      raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
+    if not statement in available_statements:
+        raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
     
-  # Check that year is a list
-  if isinstance(year, int):
-    raise TypeError("Invalid data format: year must be a string")
-  elif isinstance(year, float):
-    raise TypeError("Invalid data format: year must be a string")
-  if not type(year) is list:
-    raise NameError("Invalid data format: year must be a list of strings")
+    # Check that year is a list
+    if isinstance(year, int):
+        raise TypeError("Invalid data format: year must be a string")
+    elif isinstance(year, float):
+        raise TypeError("Invalid data format: year must be a string")
+    if not type(year) is list:
+        raise NameError("Invalid data format: year must be a list of strings")
     
-  # Check that period is a list  
-  if not type(period) is list:
-      raise NameError("Invalid data format: period must be a list of strings")
+    # Check that period is a list  
+    if not type(period) is list:
+          raise NameError("Invalid data format: period must be a list of strings")
   
-  # Check that the length of year is 4
-  for y in year:
-    if not len(y)== 4:
-      raise Exception("Invalid data format: year must be a string of 4 digits")
+    # Check that the length of year is 4
+    for y in year:
+        if not len(y)== 4:
+          raise Exception("Invalid data format: year must be a string of 4 digits")
 
-  # Initialize API key
-  intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
-  fundamentals_api = intrinio_sdk.FundamentalsApi()
-    
-  # Empty list to store results: reformat later to dataframe
-  results = []
-  ## Outer loop over years, inner loop over quarters
-  for i in year:
-
-    for j in period:
-      # define key to obtain relevant information
-      key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
-      # Obtain req. object from API
-      try:
-        # put stock prices into a variable
-        fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
-      except:
-        print("Invalid API Key: please input a valid API key as a string")
-        return
-        
-      my_fund = fundamentals.reported_financials          
+    # Initialize API key
+    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+    fundamentals_api = intrinio_sdk.FundamentalsApi()
+      
+    # Empty list to store results: reformat later to dataframe
+    results = []
+    ## Outer loop over years, inner loop over quarters
+    for i in year:
+        for j in period:
+            # define key to obtain relevant information
+            key = str(ticker) + '-' + str(statement) + '-' + str(i) + '-' + str(j)
+            # Obtain req. object from API
+            try:
+                # put stock prices into a variable
+                fundamentals = fundamentals_api.get_fundamental_reported_financials(key)
+            except:
+                print("Invalid API Key: please input a valid API key as a string")
+                return
+            
+            my_fund = fundamentals.reported_financials          
 
                
-      # Empty dictionary to append the results : convert to df at the last stage
-      my_dict ={}
-      my_dict['ticker'] = ticker
-      my_dict['statement'] = statement
-      my_dict['year'] = i
-      my_dict['period'] = j
+            # Empty dictionary to append the results : convert to df at the last stage
+            my_dict ={}
+            my_dict['ticker'] = ticker
+            my_dict['statement'] = statement
+            my_dict['year'] = i
+            my_dict['period'] = j
     
-      for n in range(0, len(my_fund)):
-        my_dict[str(my_fund[n].xbrl_tag.tag)] = []
-    
-        # add values to the dictionary
-      for k in range(0, len(my_fund)):
-        for key, val in my_dict.items():
-          if my_fund[k].xbrl_tag.tag == key:
-            my_dict[key].append(my_fund[k].value)
-            my_dict[key] = [sum(my_dict[key])]
-      results.append(my_dict)
+            for n in range(0, len(my_fund)):
+                my_dict[str(my_fund[n].xbrl_tag.tag)] = []
+          
+              # add values to the dictionary
+            for k in range(0, len(my_fund)):
+                for key, val in my_dict.items():
+                    if my_fund[k].xbrl_tag.tag == key:
+                        my_dict[key].append(my_fund[k].value)
+                        my_dict[key] = [sum(my_dict[key])]
+            results.append(my_dict)
   
-  final_df = pd.DataFrame(results)
+    final_df = pd.DataFrame(results)
 
-  ## if_else for output format
-  if output_format == 'pddf':
-    return final_df
-  else:
-    return results
+    ## if_else for output format
+    if output_format == 'pddf':
+        return final_df
+    else:
+        return results
 
 # Function that gathers a given statement at a specific time for different companies
 def gather_financial_statement_company_compare(api_key, ticker, statement, year, period, output_format='dict'): 
