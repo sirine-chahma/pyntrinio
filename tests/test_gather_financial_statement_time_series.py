@@ -55,7 +55,16 @@ def test_year_format():
         gather_financial_statement_time_series(api_key, ticker, statement, ['201', '2018'], period, output_format = 'pddf')
 
     with raises(NameError):
-        gather_financial_statement_time_series(api_key, ticker, statement, '2017', period)    
+        gather_financial_statement_time_series(api_key, ticker, statement, '2017', period)
+    
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, ticker, statement, 2017, period)
+    
+    with raises(TypeError):
+        gather_financial_statement_time_series(api_key, ticker, statement, 2017.0, period)    
+
+    with raises(NameError):
+        gather_financial_statement_time_series(api_key, ticker, statement, years, period)
 
     with raises(Exception):
         gather_financial_statement_time_series(api_key, ticker, statement, ['2017' '2018'], period) 

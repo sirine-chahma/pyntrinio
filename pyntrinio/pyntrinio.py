@@ -64,8 +64,12 @@ def gather_financial_statement_time_series(api_key, ticker, statement, year, per
       raise Exception("Invalid data format: statement must be one of 'income_statement', 'cash_flow_statement' or 'balance_sheet_statement'")
     
   # Check that year is a list
+  if isinstance(year, int):
+    raise TypeError("Invalid data format: year must be a string")
+  elif isinstance(year, float):
+    raise TypeError("Invalid data format: year must be a string")
   if not type(year) is list:
-      raise NameError("Invalid data format: year must be a list of strings")
+    raise NameError("Invalid data format: year must be a list of strings")
     
   # Check that period is a list  
   if not type(period) is list:
