@@ -3,9 +3,7 @@
 
 from pyntrinio.pyntrinio import gather_stock_time_series
 import pandas as pd
-from datetime import datetime, date
-import intrinio_sdk
-import pytest
+from datetime import date
 
 # helper data
 api_key = "OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1"
@@ -151,7 +149,7 @@ def test_start_date_only_shape():
 
 def test_no_dates_shape():
     """
-    Test that you get a valid output shape when you don't put in a 
+    Test that you get a valid output shape when you don't put in a
         start or end date
     """
     assert gather_stock_time_series(
