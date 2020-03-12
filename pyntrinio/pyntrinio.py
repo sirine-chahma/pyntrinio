@@ -458,7 +458,7 @@ def gather_stock_time_series(
 
     # if the ouput format is a dataframe, change to that
     if output_format == 'pddf':
-        results = pd.DataFrame([results])
+        results = pd.DataFrame(results)
 
     return results
 
