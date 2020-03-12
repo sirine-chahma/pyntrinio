@@ -5,6 +5,7 @@ from pyntrinio.pyntrinio import gather_stock_time_series
 import pandas as pd
 from datetime import datetime, date
 import intrinio_sdk
+import pytest
 
 # helper data
 api_key = "OjhlMjhjNTBmY2IyMWJiMWE0MTExYjQwNWZmZTVkZWM1"
@@ -49,7 +50,7 @@ def test_pddf_output_type_test():
 # test that you get an error when you put in an incorrect API key
 
 
-def api_key_test():
+def test_api_key():
     """
     Give a wrong api_key, see if the function correctly handles the exception.
     """
@@ -61,22 +62,19 @@ def api_key_test():
 # test that you get an error when you put in an incorrect ticker format
 
 
-def ticker_format_test():
+def test_ticker_format():
     """
     Give a wrong ticker format, see if the function correctly handles the
         exception.
     """
-    msg = "Invalid Input: ticker has to be a string, e.g. 'APPL'"
+    msg = "Invalid data format: ticker must be a string"
     assert gather_stock_time_series(
         api_key, 123, start_date="2020-01-15", end_date="2020-01-25") == msg
-    assert gather_stock_time_series(
-        api_key, ["AAPL", "CSCO"], start_date="2020-01-15",
-        end_date="2020-01-25") == msg
 
 # test that you get an error when you put in an invalid date format
 
 
-def start_date_format_test():
+def test_start_date_format():
     """
     See if the function correctly handles the input dates in wrong formats.
     """
@@ -85,7 +83,7 @@ def start_date_format_test():
         api_key, ticker, start_date='2018-15-12') == msg
 
 
-def end_date_format_test():
+def test_end_date_format():
     """
     See if the function correctly handles the input dates in wrong formats.
     """
@@ -96,7 +94,7 @@ def end_date_format_test():
 # test that the allow_max_rows argument works
 
 
-def enable_max_rows_test():
+def test_enable_max_rows():
     """
     See if function correctly returns 100 rows by default
     """
@@ -104,7 +102,7 @@ def enable_max_rows_test():
         api_key, ticker, output_format='pddf').shape[0] == 100
 
 
-def disable_max_rows_test():
+def test_disable_max_rows():
     """
     See if function correctly returns 100 rows by default
     """
