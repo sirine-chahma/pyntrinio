@@ -398,9 +398,15 @@ def gather_stock_time_series(
     >>> gather_stock_time_series(api_key, 'AAPL', start_date="2020-01-15",
     end_date="2020-01-30", output_format="pddf")
     """
+    # error messages
+    msg1 = "Invalid data format: ticker must be a string"
+    msg2 = "Invalid Date format: date must be a string in the format %Y-%m-%d"
+    msg3 = "Invalid Input: end_date must be later than start_date"
+    msg4 = "Invalid API Key: please input a valid API key as a string"
+
     # ensure the type of the ticker is a string
     if type(ticker) != str:
-        return "Invalid data format: ticker must be a string"
+        return msg1
 
     try:
         # change dates to datetime objects
@@ -408,11 +414,12 @@ def gather_stock_time_series(
             start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
         if end_date is not None:
             end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-    except:
-        return "Invalid Date format: date must be a string in the format %Y-%m-%d"
+    except Exception:
+        return msg2
 
-    if start_date is not None and end_date is not None and start_date >= end_date:
-        return "Invalid Input: end_date must be later than start_date"
+    if start_date is not None and end_date is not None:
+        if start_date >= end_date:
+            return msg3
 
     # initialize API key
     intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
@@ -421,7 +428,7 @@ def gather_stock_time_series(
     security_api = intrinio_sdk.SecurityApi()
 
     # if allow_max_rows=False
-    if allow_max_rows == False:
+    if allow_max_rows is False:
         rows = 100
     else:
         rows = 10000
@@ -431,8 +438,8 @@ def gather_stock_time_series(
         stock_prices = security_api.get_security_stock_prices(
             ticker, start_date=start_date, end_date=end_date,
             page_size=rows).stock_prices
-    except:
-        return "Invalid API Key: please input a valid API key as a string"
+    except Exception:
+        return msg4
 
     # initialize a results dictionary
     results = {'date': [], 'close': [], 'adj_close': [], 'high': [],
