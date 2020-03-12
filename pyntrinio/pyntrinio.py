@@ -199,32 +199,30 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
     statements = ['income_statement', 'balance_sheet_statement',
                   'cash_flow_statement']
 
+
     inputs = {'api_key': api_key, 'statement': statement, 'year': year,
               'period': period}
+
+    intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
+    fundamentals_api = intrinio_sdk.FundamentalsApi()
+
     # Check if api_key, statement, year, period are strings
     for inst in inputs.keys():
-        if isinstance(inputs[inst], int):
+        if not isinstance(inputs[inst], str):
             raise TypeError("Invalid data format: " + inst +
-                            " must be a string")
-        elif isinstance(inputs[inst], float):
-            raise TypeError("Invalid data format: " + inst +
-                            " must be a string")
-        elif isinstance(inputs[inst], list):
-            raise TypeError("Invalid data format: " + inst +
-                            " must be a string")
-        elif not isinstance(inputs[inst], str):
-            raise NameError("Invalid data format: " + inst +
                             " must be a string")
 
+    # test if the API Key works
+    try:
+        fundamentals_api.get_fundamental_reported_financials('AAPL-income_statement-2019-Q1')
+    except Exception:
+        msg_apy = "Invalid API Key: please input a valid API key as a string"
+        return msg_apy
+
     # Check if ticker is a list
-    if isinstance(ticker, int):
-        raise TypeError("Invalid data format: ticker must be a string")
-    elif isinstance(ticker, float):
-        raise TypeError("Invalid data format: ticker must be a string")
-    elif isinstance(ticker, str):
-        raise TypeError("Invalid data format: ticker must be a string")
+
     if not isinstance(ticker, list):
-        raise NameError("Invalid data format: ticker must be a list")
+        raise TypeError("Invalid data format: ticker must be a list")
 
     # Check if the elements in the ticker list are strings
     for comp in ticker:
@@ -265,9 +263,10 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
             # get the object that we want from the API
             fundamentals = fundamentals_api.get_fundamental_reported_financials(
                 key)
-        except:
-            print("Invalid API Key: please input a valid API key as a string")
-            return
+        except Exception:
+            msg = "Invalid agruments: please make sure that your statement/year/period are valid"
+            return msg
+
         my_fund = fundamentals.reported_financials
 
         # This dictionary will contain all the information for one company
@@ -284,17 +283,17 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
             balance = tag_dic.balance
             name = tag_dic.name
             tag = tag_dic.tag
-        # tag is a key of this dictionnary
+            # tag is a key of this dictionnary
 
-        # if the tag is several times in the original object, we keep one tag
-        # and the value is the sum or the substraction of all the values of
-        # this tag (depending on the value of balance)
-        if tag in dict.keys():
-            if balance == 'credit':
-                value = dict[tag]['value'] - value
-            else:
-                value = dict[tag]['value'] + value
-        dict[tag] = {'value': value, 'balance': balance, 'name': name}
+            # if the tag is several times in the original object, we keep one tag
+            # and the value is the sum or the substraction of all the values of
+            # this tag (depending on the value of balance)
+            if tag in dict.keys():
+                if balance == 'credit':
+                    value = dict[tag]['value'] - value
+                else:
+                    value = dict[tag]['value'] + value
+            dict[tag] = {'value': value, 'balance': balance, 'name': name}
         result.append(dict)
 
     if output_format == 'dict':
@@ -351,11 +350,11 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
                             i)] + [sub_dict[val]['value']]
                         # We add some 'None' to make sure that all the values
                         # are the same length in this dictionary
-                        for val in df.keys():
-                            # The length of each value should be i+1
-                            # (=number of companies we studied)
-                            if len(df[val]) != i+1:
-                                df[val].append(None)
+            for val in df.keys():
+                # The length of each value should be i+1
+                # (=number of companies we studied)
+                if len(df[val]) != i+1:
+                    df[val].append(None)
 
     return pd.DataFrame(df)
 
