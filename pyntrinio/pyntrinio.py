@@ -105,7 +105,7 @@ def gather_financial_statement_time_series(
                 # put stock prices into a variable
                 funda = fundamentals_api.get_fundamental_reported_financials(
                     key)
-            except Exception :
+            except Exception:
                 print(
                     "Invalid API Key: please input a valid API key as a string"
                 )
@@ -178,8 +178,6 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
     """
     statements = ['income_statement', 'balance_sheet_statement',
                   'cash_flow_statement']
-
-
     inputs = {'api_key': api_key, 'statement': statement, 'year': year,
               'period': period}
 
