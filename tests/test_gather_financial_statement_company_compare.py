@@ -24,9 +24,6 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(
             ['la'], ticker, statement, year, period)
-    with raises(NameError):
-        gather_financial_statement_company_compare(
-            la, ticker, statement, year, period)
     with raises(TypeError):
         gather_financial_statement_company_compare(
             123, ticker, statement, year, period)
@@ -41,9 +38,6 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, 123.3, year, period)
-    with raises(NameError):
-        gather_financial_statement_company_compare(
-            api_key, ticker, stat, year, period)
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, ['stat'], year, period)
@@ -55,9 +49,6 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, statement, 1954.4, period)
-    with raises(NameError):
-        gather_financial_statement_company_compare(
-            api_key, ticker, statement, years, period)
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, statement, ['123'], period)
@@ -69,9 +60,6 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, statement, year, 3.3)
-    with raises(NameError):
-        gather_financial_statement_company_compare(
-            api_key, ticker, statement, year, periods)
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, ticker, statement, year, ['3.3'])
