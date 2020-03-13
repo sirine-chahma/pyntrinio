@@ -21,14 +21,14 @@ def test_return_accuracy():
     assert result.shape == (2, 6)
 
 
-def api_key_test():
+def test_api_key():
     """
     Give a wrong api_key, see if the function correctly handles the exception.
     """
     msg = "Incorrect API Key - please input a valid API key as a string"
     assert gather_stock_returns('abc', 'AAPL', buy_date, sell_date) == msg
     
-def date_format_test():
+def test_date_format():
     """
     See if the function correctly handles the input dates in wrong formats.
     """
@@ -36,7 +36,7 @@ def date_format_test():
     assert gather_stock_returns(api_key, 'AAPL', '2018', sell_date) == msg
 
 
-def date_logic_test():
+def test_date_logic():
     """
     Make sell_date earlier to buy date. See if the function handles this exception.
     """
