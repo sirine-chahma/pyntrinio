@@ -504,7 +504,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
         if buy_date >= sell_date:
             print("Invalid Input: sell_date must be later than buy_date")
             return
-    except:
+    except Exception:
         print(
             "Invalid Date format: date must be a string in the format %Y-%m-%d"
         )
@@ -523,7 +523,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     try:
         security_api.get_security_stock_prices(ticker[0], start_date=buy_date,
                                                end_date=sell_date)
-    except:
+    except Exception:
         print("Invalid API Key: please input a valid API key as a string")
         return
 
