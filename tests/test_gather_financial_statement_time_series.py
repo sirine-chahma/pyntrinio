@@ -13,10 +13,11 @@ ticker = 'CVX'
 statement = 'income_statement'
 year = ['2017', '2018']
 period = ['Q1', 'Q3']
-var_1=OjQ0Yz
-var_2=CVX
+var_1 = OjQ0Yz
+var_2 = CVX
 var_3 = years
-var_5=Q1
+var_4 = income_statement
+var_5 = Q1
 
 
 def test_api_key_format():
@@ -95,7 +96,6 @@ def test_statement_format():
     """
     Test if the statement is a string and available in a list of valid statement options
     """
-    var_4=income_statement
     with raises(NameError):
         gather_financial_statement_time_series(
             api_key, ticker, var_4, year, period)
@@ -127,15 +127,14 @@ def test_final_format():
     Tests if the final output is of the right format
     """
     # Check that the type of the output is correct
-    results = gather_financial_statement_time_series(api_key, 'AAPL',
-                                                    'income_statement',
-                                                    ['2018', '2019'],
-                                                    ['Q1'],
-                                                    output_format='dict')
-    final_df = gather_financial_statement_time_series(api_key, 'AAPL',
-                                                    'income_statement',
-                                                    ['2018', '2019'],
-                                                    ['Q1'],
-                                                    output_format='pddf')
+    results = gather_financial_statement_time_series(
+                api_key, 'AAPL', 'income_statement', ['2018', '2019'], 
+                ['Q1'], output_format='dict'
+    )
+    final_df = gather_financial_statement_time_series(
+                api_key, 'AAPL', 'income_statement', ['2018', '2019'], 
+                ['Q1'], output_format='pddf'
+    )
     assert(type(results) == list)
     assert(type(final_df) == pd.core.frame.DataFrame)
+    
