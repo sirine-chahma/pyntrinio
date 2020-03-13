@@ -22,7 +22,7 @@ Python is an object-oriented programming language, which has allowed contributor
 pip install -i https://test.pypi.org/simple/ pyntrinio
 ```
 
-## Coverage
+### Coverage
 
 To get the line coverage, run the following command line code :
 
@@ -45,8 +45,9 @@ poetry run pytest --cov-branch --cov=pyntrinio
 3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
 4. **gather_stock_returns()**: This function takes in multiple stock ticker symbols, buy-in date, sell-out date and returns a dataframe containing the historical prices at buy-in and sell-out date as well as the corresponding returns (profit/loss).
 
-### Dependencies
+### Usage
 
+#### API KEYS
 Before using any functions included in this package, you must sign up for an appropriate [Intrinio account](https://intrinio.com/). Once you have signed up for the appropriate account, you can find your API key (which is a required argument in all functions) by doing the following:
 
 1. In the top right corner, select `My Account`
@@ -54,6 +55,13 @@ Before using any functions included in this package, you must sign up for an app
 3. Copy your relevant API Key. Note that this is unique to you and should not be shared.
 
 If you are using a free version of Intrinio for educational purposes, please note that you will only have access to the [Developer Sandbox](https://product.intrinio.com/developer-sandbox) so use that API key in functions.
+
+#### Tickers
+The following entities are covered in the sandbox data for the US Fundamentals and Stock Prices data feed:  
+['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
+[Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)
+
+### Dependencies
 
 Python 3.7.3 and Python packages:
 
