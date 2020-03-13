@@ -178,7 +178,7 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
     """
     statements = ['income_statement', 'balance_sheet_statement',
                   'cash_flow_statement']
-    
+
     inputs = {'api_key': api_key, 'statement': statement, 'year': year,
               'period': period}
 

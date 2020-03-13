@@ -14,6 +14,7 @@ statement = 'income_statement'
 year = ['2017', '2018']
 period = ['Q1', 'Q3']
 
+
 def test_api_key_format():
     """
     Test if the api_key is a string
