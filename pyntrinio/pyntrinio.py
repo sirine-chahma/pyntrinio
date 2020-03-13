@@ -496,7 +496,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     >>> gather_stock_returns(api_key, ['AAPL', 'CSCO'], "2017-12-31",
     "2019-03-01")
     """
-    
+
     msg1 = "Invalid Input: sell_date must be later than buy_date"
     msg2 = "Invalid Date format: date must be a string in the format %Y-%m-%d"
     msg3 = "Invalid API Key: please input a valid API key as a string"
