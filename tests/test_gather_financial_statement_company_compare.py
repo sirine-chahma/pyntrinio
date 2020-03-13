@@ -109,8 +109,8 @@ def test_type_input():
         'wrong_key', ticker, statement, year, period) == msg
 
     # Check the the arguments are right
-    msg = "Invalid agruments: please make sure that your statement\
-        /year/period are valid"
+    msg = "Invalid agruments: please make sure that your statement"
+    msg = msg + "/year/period are valid"
     assert gather_financial_statement_company_compare(
         api_key, ['ticker'], statement, year, period) == msg
 

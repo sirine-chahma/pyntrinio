@@ -265,8 +265,8 @@ def gather_financial_statement_company_compare(api_key, ticker, statement,
             fund = fundamentals_api.get_fundamental_reported_financials(
                 key)
         except Exception:
-            msg = "Invalid agruments: please make sure that your statement\
-                /year/period are valid"
+            msg = "Invalid agruments: please make sure that your statement"
+            msg = msg + "/year/period are valid"
             return msg
 
         my_fund = fund.reported_financials
