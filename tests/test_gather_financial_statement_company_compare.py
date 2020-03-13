@@ -68,9 +68,6 @@ def test_type_input():
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, 'AAPL', statement, year, period)
-    with raises(NameError):
-        gather_financial_statement_company_compare(
-            api_key, AAPL, statement, year, period)
     with raises(TypeError):
         gather_financial_statement_company_compare(
             api_key, 123, statement, year, period)
