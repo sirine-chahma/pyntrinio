@@ -99,16 +99,6 @@ def test_enable_max_rows():
     assert gather_stock_time_series(
         api_key, ticker, output_format='pddf').shape[0] == 100
 
-
-def test_disable_max_rows():
-    """
-    See if function correctly returns 100 rows by default
-    """
-    assert gather_stock_time_series(api_key, ticker,
-                                    start_date="2019-01-15",
-                                    output_format='pddf',
-                                    allow_max_rows=True).shape[0] > 100
-
 # test that you get an error when the end date is before the start date
 
 
