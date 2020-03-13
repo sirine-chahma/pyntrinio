@@ -5,6 +5,7 @@
 
 from pyntrinio.pyntrinio import gather_financial_statement_time_series
 from pytest import raises
+import pandas as pd
 
 # Sample data for testing
 api_key = 'OjQ0YzljN2E4ODk5YzM1MzVhMTZmNTUwNmE2N2M0NTYz'
@@ -74,7 +75,7 @@ def test_statement_format():
     Test if the statement is a string and available in a list of valid statement options
     """
     with raises(NameError):
-        gather_financial_statement_time_series(api_key, ticker, income_statement, year, period, output_format = 'pddf')
+        gather_financial_statement_time_series(api_key, ticker, income_statement, year, period)
 
     with raises(Exception):
         gather_financial_statement_time_series(api_key, ticker, 'income_statemen', year, period)
@@ -91,4 +92,18 @@ def test_period_format():
 
     with raises(NameError):
         gather_financial_statement_time_series(api_key, ticker, 'income_statement', year, Q1)
+
+
+
+def test_output_format():
+    '''
+    Tests if the output seems right (type, dimension and one value)
+    ''' 
+    #Check that the type of the output is correct
+    results=gather_financial_statement_time_series(api_key, 'AAPL',
+    'income_statement', ['2018','2019'], ['Q1'], output_format='dict') 
+    final_df=gather_financial_statement_time_series(api_key, 'AAPL',
+    'income_statement', ['2018','2019'], ['Q1'], output_format='pddf')
+    assert(type(results) == list)
+    assert(type(final_df) == pd.core.frame.DataFrame)       
 

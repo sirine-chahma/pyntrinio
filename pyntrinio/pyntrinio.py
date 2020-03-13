@@ -15,8 +15,6 @@ def gather_financial_statement_time_series(
     """
     Given the tickers, statement, year and period returns the complete
     financial information from the Intrinio API stock data
-
-
     Parameters
     -----------
     api_key : str
@@ -34,26 +32,21 @@ def gather_financial_statement_time_series(
     output_format : str (optional, default = 'pddf')
       the output format for the data, options are 'dict' for dictionary
       or 'pddf' for pandas dataframe
-
     Returns
     -----------
     object of type output_format
       information about the given statement for the given ticker
       at the given times in the specified output format
-
     Example
     -----------
     >>> gather_financial_statement_time_series(api_key, 'AAPL',
     'income_statement', ['2018,'2019'], ['Q1'])
     """
-
     # https://data.intrinio.com/data-tags
     available_statements = [
         'income_statement', 'cash_flow_statement', 'balance_sheet_statement'
     ]
-
     inputs = {'api_key': api_key, 'ticker': ticker, 'statement': statement}
-
     # Check if api_key, ticker and statement are strings
     for inst in inputs.keys():
         if isinstance(inputs[inst], int):
@@ -67,20 +60,17 @@ def gather_financial_statement_time_series(
         elif not isinstance(inputs[inst], str):
             raise NameError("Invalid data format: " + inst +
                             " must be a string")
-
     # Check if the output_format is either 'dict' or 'pddf'
     if output_format not in ['dict', 'pddf']:
         raise Exception(
             "Invalid data format: output_format" +
             "must be 'dict' or 'pddf'")
-
     # Check that the value of statement is valid
     if statement not in available_statements:
         raise Exception(
             "Invalid data format: statement must be one of" +
             "'income_statement', 'cash_flow_statement' or " +
             "'balance_sheet_statement'")
-
     # Check that year is a list
     if isinstance(year, int):
         raise TypeError("Invalid data format: year must be a string")
@@ -88,24 +78,20 @@ def gather_financial_statement_time_series(
         raise TypeError("Invalid data format: year must be a string")
     if not type(year) is list:
         raise NameError("Invalid data format: year must be a list of strings")
-
     # Check that period is a list
     if not type(period) is list:
         raise NameError(
             "Invalid data format: " +
             "period must be a list of strings")
-
     # Check that the length of year is 4
     for y in year:
         if not len(y) == 4:
             raise Exception(
                 "Invalid data format: " +
                 "year must be a string of 4 digits")
-
     # Initialize API key
     intrinio_sdk.ApiClient().configuration.api_key['api_key'] = api_key
     fundamentals_api = intrinio_sdk.FundamentalsApi()
-
     # Empty list to store results: reformat later to dataframe
     results = []
     # Outer loop over years, inner loop over quarters
@@ -117,16 +103,14 @@ def gather_financial_statement_time_series(
             # Obtain req. object from API
             try:
                 # put stock prices into a variable
-                fundamentals = fundamentals_api.get_fundamental_reported_financials(
+                funda = fundamentals_api.get_fundamental_reported_financials(
                     key)
             except:
                 print(
                     "Invalid API Key: please input a valid API key as a string"
                 )
                 return
-
-            my_fund = fundamentals.reported_financials
-
+            my_fund = funda.reported_financials
             # Empty dictionary to append the results : convert to df at the
             # last stage
             my_dict = {}
@@ -134,10 +118,8 @@ def gather_financial_statement_time_series(
             my_dict['statement'] = statement
             my_dict['year'] = i
             my_dict['period'] = j
-
             for n in range(0, len(my_fund)):
                 my_dict[str(my_fund[n].xbrl_tag.tag)] = []
-
             # add values to the dictionary
             for k in range(0, len(my_fund)):
                 for key, val in my_dict.items():
@@ -145,9 +127,7 @@ def gather_financial_statement_time_series(
                         my_dict[key].append(my_fund[k].value)
                         my_dict[key] = [sum(my_dict[key])]
             results.append(my_dict)
-
     final_df = pd.DataFrame(results)
-
     # if_else for output format
     if output_format == 'pddf':
         return final_df
