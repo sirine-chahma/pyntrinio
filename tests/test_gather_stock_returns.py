@@ -10,6 +10,9 @@ buy_date = '2011-01-01'
 sell_date = '2019-12-10'
 rtn_appl = 555.38
 rtn_csco = 176.01
+msg1 = "Invalid Input: sell_date must be later than buy_date"
+msg2 = "Invalid Date format: date must be a string in the format %Y-%m-%d"
+msg3 = "Invalid API Key: please input a valid API key as a string"
 
 
 def test_return_accuracy():
@@ -27,23 +30,19 @@ def test_api_key():
     """
     Give a wrong api_key, see if the function correctly handles the exception.
     """
-    msg = "Incorrect API Key - please input a valid API key as a string"
-    assert gather_stock_returns('abc', 'AAPL', buy_date, sell_date) == msg
+    assert gather_stock_returns('abc', 'AAPL', buy_date, sell_date) == msg3
 
 
 def test_date_format():
     """
     See if the function correctly handles the input dates in wrong formats.
     """
-    msg = "Invalid Date format - "
-    msg = msg+"please input the date as a string with format %Y-%m-%d"
-    assert gather_stock_returns(api_key, 'AAPL', '2018', sell_date) == msg
+    assert gather_stock_returns(api_key, 'AAPL', '2018', sell_date) == msg2
 
 
 def test_date_logic():
     """
     Exception: sell_date earlier to buy date.
     """
-    msg = "Invalid Input: `sell_date` is earlier than `buy_date`."
     assert gather_stock_returns(
-        api_key, 'AAPL', buy_date='2019-01-01', sell_date='2017-01-01') == msg
+        api_key, 'AAPL', buy_date='2019-01-01', sell_date='2017-01-01') == msg1

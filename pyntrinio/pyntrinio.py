@@ -496,19 +496,19 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
     >>> gather_stock_returns(api_key, ['AAPL', 'CSCO'], "2017-12-31",
     "2019-03-01")
     """
+    
+    msg1 = "Invalid Input: sell_date must be later than buy_date"
+    msg2 = "Invalid Date format: date must be a string in the format %Y-%m-%d"
+    msg3 = "Invalid API Key: please input a valid API key as a string"
 
     # test whether the input dates are in the right format
     try:
         buy_date = datetime.strptime(buy_date, '%Y-%m-%d').date()
         sell_date = datetime.strptime(sell_date, '%Y-%m-%d').date()
         if buy_date >= sell_date:
-            print("Invalid Input: sell_date must be later than buy_date")
-            return
+            return msg1
     except Exception:
-        print(
-            "Invalid Date format: date must be a string in the format %Y-%m-%d"
-        )
-        return
+        return msg2
 
     if type(ticker) == str:  # if user gives just one ticker
         ticker = [ticker]
@@ -524,8 +524,7 @@ def gather_stock_returns(api_key, ticker, buy_date, sell_date):
         security_api.get_security_stock_prices(ticker[0], start_date=buy_date,
                                                end_date=sell_date)
     except Exception:
-        print("Invalid API Key: please input a valid API key as a string")
-        return
+        return msg3
 
     # create the result DataFrame to record and report
     results = pd.DataFrame(columns=['Stock', 'Buy date', 'Buy price',
