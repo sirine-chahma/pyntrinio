@@ -35,13 +35,14 @@ def test_date_format():
     """
     See if the function correctly handles the input dates in wrong formats.
     """
-    msg = "Invalid Date format - please input the date as a string with format %Y-%m-%d"
+    msg = "Invalid Date format - "
+    msg = msg+"please input the date as a string with format %Y-%m-%d"
     assert gather_stock_returns(api_key, 'AAPL', '2018', sell_date) == msg
 
 
 def test_date_logic():
     """
-    Make sell_date earlier to buy date. See if the function handles this exception.
+    Exception: sell_date earlier to buy date.
     """
     msg = "Invalid Input: `sell_date` is earlier than `buy_date`."
     assert gather_stock_returns(
