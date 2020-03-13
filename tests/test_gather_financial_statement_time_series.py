@@ -95,7 +95,7 @@ def test_year_format():
 
 def test_statement_format():
     """
-    Test if the statement is a string and 
+    Test if the statement is a string and
     available in a list of valid statement options
     """
     with raises(NameError):
