@@ -20,7 +20,8 @@ Python is an object-oriented programming language, which has allowed contributor
 
 ```
 pip install -i https://test.pypi.org/simple/ pyntrinio
-```
+```  
+Please make sure your `pandas` package is up to date to meet the dependency requirements. 
 
 ### Coverage
 
@@ -61,7 +62,28 @@ The following entities are covered in the sandbox data for the US Fundamentals a
 ```
 ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
 ```
-[Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)
+[Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)  
+
+#### Examples
+Some simple examples of using the function:  
+```{python}
+# to get the income statements across time of the same company  
+gather_financial_statement_time_series(api_key, ticker='AAPL',
+    statement='income_statement', year=['2018', '2019'], 
+    period=['Q1'], output_format='dict')  
+
+# to get the income statements of different companies at the same point of time  
+gather_financial_statement_company_compare(api_key, ticker=['AAPL', 'CSCO'],
+    statement='income_statement', year='2014', period='Q1', output_format='pddf')
+
+# to get the historical stock prices of a company
+gather_stock_time_series(api_key, ticker='AAPL', start_date="2017-09-30", 
+    end_date="2020-02-03", output_format='pddf')  
+
+# to get the simulated returns of a stock / several stocks
+gather_stock_returns(api_key, ticker=['AAPL', 'CSCO'], buy_date="2017-09-30", 
+    sell_date="2020-02-03")
+```  
 
 ### Dependencies
 
