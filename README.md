@@ -89,7 +89,7 @@ gather_stock_returns(api_key, ticker=['AAPL', 'CSCO'], buy_date="2017-09-30",
 
 Python 3.7.3 and Python packages:
 
-- pandas==0.24.2
+- pandas==1.0.1
 - intrinio-sdk==5.1.0
 - pytest==5.3.5
 - python-dateutil==2.8.1
