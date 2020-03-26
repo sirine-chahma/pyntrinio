@@ -84,6 +84,9 @@ The following entities are covered in the sandbox data for the US Fundamentals a
 ```
 [Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)  
 
+**Note** 
+The package performance does not alter for users with paid access to intrinio dataset, i.e. with company ticker(s) not listed above. For ex. say google 'GOOG'
+
 ### Functions
 1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
 2. **gather_financial_statement_company_compare()**: This function takes in a list containing the tickers of the companies we want to compare, the statement, the year and the period of the year we want to study, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, for the selected companies at the wanted time. 
