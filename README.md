@@ -68,7 +68,7 @@ The following entities are covered in the sandbox data for the US Fundamentals a
 
 #### Examples
 Some simple examples of using the function:  
-```{python}
+```python
 # to get the income statements across time of the same company  
 gather_financial_statement_time_series(api_key, ticker='AAPL',
     statement='income_statement', year=['2018', '2019'], 
