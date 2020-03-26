@@ -42,11 +42,26 @@ poetry add --dev pytest-cov
 poetry run pytest --cov-branch --cov=pyntrinio
 ```
 
-### Functions
-1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
-2. **gather_financial_statement_company_compare()**: This function takes in a list containing the tickers of the companies we want to compare, the statement, the year and the period of the year we want to study, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, for the selected companies at the wanted time. 
-3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
-4. **gather_stock_returns()**: This function takes in multiple stock ticker symbols, buy-in date, sell-out date and returns a dataframe containing the historical prices at buy-in and sell-out date as well as the corresponding returns (profit/loss).
+### Dependencies
+
+**Installing Intrinio Python SDK**
+
+Follow these steps, as outlined in the [Intrino Python documentation](https://docs.intrinio.com/documentation/python)
+**Note** that Intrinio Python SDK should be installed prior to installing pyintrinio.
+
+Steps:
+
+To install the SDK use PIP:
+
+``` pip install intrinio-sdk ```
+
+Python 3.7.3 and Python packages:
+
+- pandas==1.0.1
+- intrinio-sdk==5.1.0
+- pytest==5.3.5
+- python-dateutil==2.8.1
+
 
 ### Usage
 
@@ -65,6 +80,13 @@ The following entities are covered in the sandbox data for the US Fundamentals a
 ['AAPL', 'AXP', 'BA', 'CAT', 'CSCO', 'CVX', 'DIS', 'DWDP', 'GE', 'GS', 'HD', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK', 'MSFT', 'NKE', 'PFE', 'PG', 'TRV', 'UNH', 'UTX', 'V', 'VZ', 'WMT', 'XOM']
 ```
 [Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)  
+
+
+### Functions
+1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
+2. **gather_financial_statement_company_compare()**: This function takes in a list containing the tickers of the companies we want to compare, the statement, the year and the period of the year we want to study, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, for the selected companies at the wanted time. 
+3. **gather_stock_time_series()**: This function takes in a single stock ticker symbol and returns historical stock price data from a timeframe, returned as a dictionary or a pandas dataframe depending on specification.
+4. **gather_stock_returns()**: This function takes in multiple stock ticker symbols, buy-in date, sell-out date and returns a dataframe containing the historical prices at buy-in and sell-out date as well as the corresponding returns (profit/loss).
 
 #### Examples
 Some simple examples of using the function:  
@@ -86,15 +108,6 @@ gather_stock_time_series(api_key, ticker='AAPL', start_date="2017-09-30",
 gather_stock_returns(api_key, ticker=['AAPL', 'CSCO'], buy_date="2017-09-30", 
     sell_date="2020-02-03")
 ```  
-
-### Dependencies
-
-Python 3.7.3 and Python packages:
-
-- pandas==1.0.1
-- intrinio-sdk==5.1.0
-- pytest==5.3.5
-- python-dateutil==2.8.1
 
 ### Documentation
 The official documentation is hosted on Read the Docs: <https://pyntrinio.readthedocs.io/en/latest/>
