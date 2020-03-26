@@ -39,8 +39,9 @@ def gather_financial_statement_time_series(
       at the given times in the specified output format
     Example
     -----------
-    >>> gather_financial_statement_time_series(api_key, 'AAPL',
-    'income_statement', ['2018,'2019'], ['Q1'])
+    >>> gather_financial_statement_time_series(api_key, ticker='AAPL',
+    statement='income_statement', year=['2018', '2019'],
+    period=['Q1'], output_format='dict')
     """
     # https://data.intrinio.com/data-tags
     available_statements = [
