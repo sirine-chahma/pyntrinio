@@ -28,7 +28,9 @@ Steps:
 
 To install the SDK use PIP:
 
-``` pip install intrinio-sdk ```
+``` 
+pip install intrinio-sdk 
+```
 
 Python 3.7.3 and Python packages:
 
