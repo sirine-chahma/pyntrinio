@@ -40,7 +40,7 @@ def gather_financial_statement_time_series(
     Example
     -----------
     >>> gather_financial_statement_time_series(api_key, ticker='AAPL',
-    statement='income_statement', year=['2018', '2019'], 
+    statement='income_statement', year=['2018', '2019'],
     period=['Q1'], output_format='dict')
     """
     # https://data.intrinio.com/data-tags
