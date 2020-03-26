@@ -16,6 +16,27 @@ Intrinio is an excellent source to get data into a python environment to analyse
 ### pyntrinio in the Python Ecosystem
 Python is an object-oriented programming language, which has allowed contributors of packages to make complex data types appear simple, and overall make packages easy for users to use. This has led to the popularity of some objects, such as numpy and pandas objects. These have been widely accepted and are key structures in the python environment. Most objects however, are not integrated with packages the same way that numpy and pandas have been adopted. This means that generally users will need to change the data type of objects either native python object types (such as dictionaries or lists), or to a widely accepted object. The goal of this project is to make stock and financial statement data more accessible by translating the objects into dictionaries or pandas objects (user's choice) so that the end user can focus on analysis and drawing insights from the data.
 
+### Dependencies
+
+**Installing Intrinio Python SDK**
+
+Follow these steps, as outlined in the [Intrino Python documentation](https://docs.intrinio.com/documentation/python)
+
+**Note** that Intrinio Python SDK should be installed prior to installing pyintrinio.
+
+Steps:
+
+To install the SDK use PIP:
+
+``` pip install intrinio-sdk ```
+
+Python 3.7.3 and Python packages:
+
+- pandas==1.0.1
+- intrinio-sdk==5.1.0
+- pytest==5.3.5
+- python-dateutil==2.8.1
+
 ### Installation:
 
 ```
@@ -41,28 +62,6 @@ To get the branch coverage, run the following command line code:
 poetry add --dev pytest-cov
 poetry run pytest --cov-branch --cov=pyntrinio
 ```
-
-### Dependencies
-
-**Installing Intrinio Python SDK**
-
-Follow these steps, as outlined in the [Intrino Python documentation](https://docs.intrinio.com/documentation/python)
-**Note** that Intrinio Python SDK should be installed prior to installing pyintrinio.
-
-Steps:
-
-To install the SDK use PIP:
-
-``` pip install intrinio-sdk ```
-
-Python 3.7.3 and Python packages:
-
-- pandas==1.0.1
-- intrinio-sdk==5.1.0
-- pytest==5.3.5
-- python-dateutil==2.8.1
-
-
 ### Usage
 
 #### API KEYS
