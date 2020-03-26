@@ -22,7 +22,8 @@ Python is an object-oriented programming language, which has allowed contributor
 
 Follow these steps, as outlined in the [Intrino Python documentation](https://docs.intrinio.com/documentation/python)
 
-**Note** 
+**Note:** 
+
 Intrinio Python SDK should be installed prior to installing pyintrinio.
 
 To install the SDK use PIP:
@@ -83,8 +84,9 @@ The following entities are covered in the sandbox data for the US Fundamentals a
 ```
 [Developer Sandbox Coverage](https://product.intrinio.com/developer-sandbox/coverage/us-fundamentals-financials-metrics-ratios-stock-prices)  
 
-**Note** 
-The package performance does not alter for users with paid access to intrinio dataset, i.e. with company ticker(s) not listed above. For ex. say google 'GOOG'
+**Note:** 
+
+The package performance does not alter for users with paid access to intrinio dataset, i.e. the functions produce expected results with company ticker(s) not listed above. For ex. say google 'GOOG' with the correct API key.
 
 ### Functions
 1. **gather_financial_statement_time_series()**: This function takes in a single stock ticker symbol, the statement, the year, and a list of various periods to compare, and a string specifying if we want the output as a dictionnary or a data frame. It returns a table or a data frame (depending on the input) of the information in the selected statement, fora time-series analysis of the company specified.
