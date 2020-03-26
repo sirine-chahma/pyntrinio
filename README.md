@@ -25,6 +25,8 @@ Please make sure your `pandas` package is up to date to meet the dependency requ
 
 ### Coverage
 
+Ensure that you have poetry installed in your system. To install, please see the [poetry installation instructions](https://python-poetry.org/docs/#installation).
+
 To get the line coverage, run the following command line code :
 
 ```{}
