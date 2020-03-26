@@ -22,9 +22,8 @@ Python is an object-oriented programming language, which has allowed contributor
 
 Follow these steps, as outlined in the [Intrino Python documentation](https://docs.intrinio.com/documentation/python)
 
-**Note** that Intrinio Python SDK should be installed prior to installing pyintrinio.
-
-Steps:
+**Note** 
+Intrinio Python SDK should be installed prior to installing pyintrinio.
 
 To install the SDK use PIP:
 
