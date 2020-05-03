@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyntrinio"
-version = "0.1.18"
+version = "0.1.19"
 description = "Python package that draws needed data from intrinio API objects."
 authors = ["Roc Zhang <roc_zhang@hotmail.com>"]
 license = "MIT"
